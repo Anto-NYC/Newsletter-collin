@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsletter Bailleurs · Century 21 Agence Collin</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; }
+
+.header { background: #111; padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+.header-brand { display: flex; align-items: center; gap: 14px; }
+.header-dot { width: 8px; height: 8px; border-radius: 50%; background: #c4a048; }
+.header-title { font-size: 15px; font-weight: 500; color: white; }
+.header-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 14px; }
+.header-user { font-size: 12px; color: rgba(255,255,255,0.4); }
+.notif-badge { position: relative; cursor: pointer; }
+.notif-icon { font-size: 18px; color: rgba(255,255,255,0.5); line-height: 1; }
+.notif-dot { position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #c4a048; display: none; border: 1.5px solid #111; }
+.notif-dot.show { display: block; }
+.notif-panel { position: absolute; top: 60px; right: 2rem; width: 320px; background: white; border-radius: 12px; border: 0.5px solid #e5e5e5; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 200; display: none; overflow: hidden; }
+.notif-panel.open { display: block; }
+.notif-panel-header { padding: 1rem 1.25rem; border-bottom: 0.5px solid #f0f0ee; display: flex; justify-content: space-between; align-items: center; }
+.notif-panel-title { font-size: 13px; font-weight: 500; }
+.notif-clear { font-size: 11px; color: #c4a048; cursor: pointer; }
+.notif-list { max-height: 300px; overflow-y: auto; }
+.notif-item { padding: 0.9rem 1.25rem; border-bottom: 0.5px solid #f9f9f8; }
+.notif-item-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+.notif-item-msg { font-size: 12px; color: #888; line-height: 1.5; }
+.notif-item-time { font-size: 11px; color: #bbb; margin-top: 4px; }
+.notif-empty { padding: 2rem; text-align: center; font-size: 13px; color: #bbb; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+.steps { display: flex; align-items: center; margin-bottom: 2.5rem; background: white; border-radius: 10px; border: 0.5px solid #e5e5e5; overflow: hidden; }
+.step { flex: 1; padding: 1rem; text-align: center; cursor: pointer; border-right: 0.5px solid #e5e5e5; transition: background 0.15s; position: relative; }
+.step:last-child { border-right: none; }
+.step-num { font-size: 11px; color: #aaa; margin-bottom: 3px; }
+.step-label { font-size: 13px; font-weight: 500; color: #888; }
+.step.active { background: #111; }
+.step.active .step-num { color: #c4a048; }
+.step.active .step-label { color: white; }
+.step.done .step-label { color: #555; }
+.step.done::after { content: '✓'; position: absolute; top: 8px; right: 10px; font-size: 10px; color: #c4a048; }
+
+.card { background: white; border-radius: 12px; border: 0.5px solid #e5e5e5; padding: 1.75rem; margin-bottom: 1.25rem; }
+.card-title { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
+.card-sub { font-size: 13px; color: #888; margin-bottom: 1.5rem; line-height: 1.6; }
+
+.section-view { display: none; }
+.section-view.active { display: block; }
+
+/* VEILLE AUTO */
+.veille-bar { background: #111; border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.veille-info { }
+.veille-title { font-size: 14px; font-weight: 500; color: white; margin-bottom: 3px; }
+.veille-sub { font-size: 12px; color: rgba(255,255,255,0.45); }
+.veille-actions { display: flex; align-items: center; gap: 10px; }
+.veille-spinner { display: none; }
+.veille-spinner.show { display: flex; align-items: center; gap: 8px; }
+.mini-spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #c4a048; border-radius: 50%; animation: spin 0.7s linear infinite; }
+.veille-spinner span { font-size: 12px; color: rgba(255,255,255,0.6); }
+.veille-last { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 4px; }
+
+/* ARTICLES */
+.add-article-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+.add-article-form input, .add-article-form select, .add-article-form textarea { width: 100%; padding: 9px 12px; border: 0.5px solid #e0e0e0; border-radius: 8px; font-size: 13px; font-family: inherit; background: #fafafa; color: #1a1a1a; outline: none; transition: border 0.15s; }
+.add-article-form input:focus, .add-article-form select:focus, .add-article-form textarea:focus { border-color: #c4a048; background: white; }
+.add-article-form .full { grid-column: 1 / -1; }
+.add-article-form textarea { resize: vertical; min-height: 70px; }
+
+.articles-list { display: flex; flex-direction: column; gap: 10px; }
+.article-item { border: 0.5px solid #e5e5e5; border-radius: 10px; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 1rem; background: #fafafa; transition: border 0.15s; }
+.article-item.selected { border-color: #c4a048; background: #fffdf5; }
+.article-item.auto-added { border-left: 3px solid #c4a048; }
+.article-check { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #ddd; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-top: 2px; transition: all 0.15s; }
+.article-item.selected .article-check { background: #c4a048; border-color: #c4a048; color: white; font-size: 11px; }
+.article-content { flex: 1; }
+.article-tag-badge { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; background: #f0f0ee; color: #666; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; }
+.auto-badge { display: inline-block; font-size: 10px; background: #fffdf5; color: #7a5c00; border: 0.5px solid #e8d48a; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+.article-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.article-summary { font-size: 13px; color: #777; line-height: 1.6; }
+.article-date { font-size: 11px; color: #bbb; margin-top: 6px; }
+.article-delete { font-size: 18px; color: #ddd; cursor: pointer; flex-shrink: 0; line-height: 1; transition: color 0.15s; }
+.article-delete:hover { color: #e24b4a; }
+
+.selection-bar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: #111; border-radius: 10px; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
+.selection-count { font-size: 13px; color: rgba(255,255,255,0.6); }
+.selection-count span { color: #c4a048; font-weight: 500; }
+.empty-state { text-align: center; padding: 3rem 1rem; color: #bbb; }
+.empty-state p { font-size: 14px; margin-top: 0.5rem; }
+
+/* STEP 2 */
+.generate-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+.gen-stat { background: #f5f5f3; border-radius: 8px; padding: 1rem; text-align: center; }
+.gen-stat-val { font-size: 20px; font-weight: 500; color: #111; }
+.gen-stat-label { font-size: 11px; color: #999; margin-top: 4px; }
+.mot-jessica { width: 100%; padding: 10px 14px; border: 0.5px solid #e0e0e0; border-radius: 8px; font-size: 13px; font-family: inherit; min-height: 90px; resize: vertical; background: #fafafa; color: #1a1a1a; outline: none; }
+.mot-jessica:focus { border-color: #c4a048; background: white; }
+.generating-state { text-align: center; padding: 3rem 1rem; }
+.spinner { width: 36px; height: 36px; border: 2.5px solid #f0f0ee; border-top-color: #c4a048; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.generating-state p { font-size: 14px; color: #888; }
+
+/* STEP 3 */
+.preview-actions { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.preview-frame { border: 0.5px solid #e5e5e5; border-radius: 12px; overflow: hidden; background: white; }
+.preview-frame iframe { width: 100%; border: none; min-height: 800px; }
+
+/* HISTORIQUE */
+.history-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border: 0.5px solid #e5e5e5; border-radius: 10px; margin-bottom: 8px; background: #fafafa; }
+.history-meta { flex: 1; }
+.history-month { font-size: 14px; font-weight: 500; }
+.history-note { font-size: 12px; color: #aaa; margin-top: 2px; }
+.history-status { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; }
+.status-draft { background: #f0f0ee; color: #888; }
+.status-validated { background: #eaf3de; color: #3b6d11; }
+.status-sent { background: #e6f1fb; color: #185fa5; }
+
+/* BUTTONS */
+.btn { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; font-family: inherit; transition: opacity 0.15s; }
+.btn:hover { opacity: 0.85; }
+.btn-primary { background: #111; color: white; }
+.btn-gold { background: #c4a048; color: #111; }
+.btn-outline { background: transparent; color: #555; border: 0.5px solid #e0e0e0; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 2rem; right: 2rem; background: #111; color: white; font-size: 13px; padding: 12px 20px; border-radius: 10px; display: none; z-index: 999; border-left: 3px solid #c4a048; max-width: 320px; }
+.toast.show { display: block; animation: fadeIn 0.2s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 14px; padding: 1.75rem; width: 100%; max-width: 480px; }
+.modal h3 { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
+.modal p { font-size: 13px; color: #888; margin-bottom: 1.25rem; line-height: 1.6; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.modal input { width: 100%; padding: 9px 12px; border: 0.5px solid #e0e0e0; border-radius: 8px; font-size: 13px; font-family: inherit; margin-bottom: 10px; background: #fafafa; outline: none; }
+.modal label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="header-dot"></div>
+    <div>
+      <div class="header-title">Newsletter Bailleurs</div>
+      <div class="header-sub">Century 21 · Agence Collin</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="notif-badge" onclick="toggleNotifPanel()">
+      <div class="notif-icon">🔔</div>
+      <div class="notif-dot" id="notif-dot"></div>
+    </div>
+    <div class="header-user">Jessica Beauvillain · Pôle gestion locative</div>
+  </div>
+</div>
+
+<!-- PANEL NOTIFICATIONS -->
+<div class="notif-panel" id="notif-panel">
+  <div class="notif-panel-header">
+    <span class="notif-panel-title">Notifications</span>
+    <span class="notif-clear" onclick="clearNotifs()">Tout effacer</span>
+  </div>
+  <div class="notif-list" id="notif-list">
+    <div class="notif-empty">Aucune notification</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="steps">
+    <div class="step active" id="step-tab-1" onclick="goToStep(1)">
+      <div class="step-num">Étape 1</div>
+      <div class="step-label">Réserve d'articles</div>
+    </div>
+    <div class="step" id="step-tab-2" onclick="goToStep(2)">
+      <div class="step-num">Étape 2</div>
+      <div class="step-label">Générer</div>
+    </div>
+    <div class="step" id="step-tab-3" onclick="goToStep(3)">
+      <div class="step-num">Étape 3</div>
+      <div class="step-label">Valider & Envoyer</div>
+    </div>
+    <div class="step" id="step-tab-4" onclick="goToStep(4)">
+      <div class="step-num">Historique</div>
+      <div class="step-label">Newsletters</div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="section-view active" id="section-1">
+
+    <div class="veille-bar">
+      <div>
+        <div class="veille-title">✨ Veille automatique</div>
+        <div class="veille-sub">Claude recherche les dernières actus immo locatif pour l'Oise et les ajoute à votre réserve.</div>
+        <div class="veille-last" id="veille-last"></div>
+      </div>
+      <div class="veille-actions">
+        <div class="veille-spinner" id="veille-spinner">
+          <div class="mini-spinner"></div>
+          <span id="veille-msg">Recherche en cours…</span>
+        </div>
+        <button class="btn btn-gold" onclick="lancerVeille()" id="btn-veille">Lancer la veille</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ajouter un article manuellement</div>
+      <div class="card-sub">Vous pouvez aussi ajouter vos propres sujets en complément de la veille automatique.</div>
+      <div class="add-article-form">
+        <div><input type="text" id="art-title" placeholder="Titre de l'article ou du sujet" /></div>
+        <div>
+          <select id="art-tag">
+            <option value="Marché local">Marché local</option>
+            <option value="Réglementation">Réglementation</option>
+            <option value="Fiscalité">Fiscalité</option>
+            <option value="Opportunité patrimoine">Opportunité patrimoine</option>
+            <option value="Conseil pratique">Conseil pratique</option>
+            <option value="Travaux & DPE">Travaux & DPE</option>
+          </select>
+        </div>
+        <div class="full"><textarea id="art-summary" placeholder="Résumé en 2-3 phrases : de quoi parle cet article, pourquoi c'est pertinent pour vos bailleurs ?"></textarea></div>
+        <div class="full" style="display:flex;gap:10px;align-items:center;">
+          <input type="text" id="art-source" placeholder="Source (ex: SeLoger, Le Figaro Immo…)" style="flex:1" />
+          <button class="btn btn-gold" onclick="addArticle()">+ Ajouter</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="selection-bar">
+      <div class="selection-count"><span id="selected-count">0</span> article(s) sélectionné(s) sur 3 recommandés</div>
+      <button class="btn btn-primary" onclick="goToStep(2)">Passer à la génération →</button>
+    </div>
+
+    <div id="articles-list" class="articles-list">
+      <div class="empty-state">
+        <div style="font-size:32px">📋</div>
+        <p>Aucun article dans la réserve ce mois-ci.<br>Lancez la veille automatique ou ajoutez un article manuellement.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="section-view" id="section-2">
+    <div class="card">
+      <div class="card-title">Récapitulatif de la sélection</div>
+      <div class="card-sub">Vérifiez les articles sélectionnés avant de générer.</div>
+      <div class="generate-summary">
+        <div class="gen-stat"><div class="gen-stat-val" id="gen-count">0</div><div class="gen-stat-label">Articles sélectionnés</div></div>
+        <div class="gen-stat"><div class="gen-stat-val" id="gen-month">—</div><div class="gen-stat-label">Édition</div></div>
+        <div class="gen-stat"><div class="gen-stat-val">~2 min</div><div class="gen-stat-label">Temps de génération</div></div>
+      </div>
+      <div id="gen-articles-preview"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Votre mot du mois</div>
+      <div class="card-sub">Ce texte apparaîtra dans l'encart signé de votre nom. Laissez vide pour que Claude en génère un automatiquement.</div>
+      <textarea class="mot-jessica" id="mot-jessica" placeholder="Ex : Ce mois-ci, nous souhaitons attirer votre attention sur…"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="goToStep(1)">← Retour</button>
+      <button class="btn btn-gold" onclick="generateNewsletter()" id="btn-generate">✨ Générer la newsletter</button>
+    </div>
+    <div class="generating-state" id="generating-state" style="display:none;">
+      <div class="spinner"></div>
+      <p id="generating-msg">Claude rédige votre newsletter…</p>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="section-view" id="section-3">
+    <div class="preview-actions">
+      <button class="btn btn-outline" onclick="goToStep(2)">← Regénérer</button>
+      <button class="btn btn-outline" onclick="downloadNewsletter()">⬇ Télécharger HTML</button>
+      <button class="btn btn-gold" onclick="openModal('modal-validate')" style="margin-left:auto;">✓ Valider la newsletter</button>
+    </div>
+    <div class="preview-frame">
+      <iframe id="preview-iframe" title="Prévisualisation newsletter"></iframe>
+    </div>
+  </div>
+
+  <!-- HISTORIQUE -->
+  <div class="section-view" id="section-4">
+    <div class="card">
+      <div class="card-title">Historique des newsletters</div>
+      <div class="card-sub">Toutes les newsletters générées et leur statut.</div>
+      <div id="history-list"><div class="empty-state"><div style="font-size:32px">📬</div><p>Aucune newsletter générée pour l'instant.</p></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL VALIDER -->
+<div class="modal-overlay" id="modal-validate">
+  <div class="modal">
+    <h3>Valider la newsletter</h3>
+    <p>La newsletter sera marquée comme prête et enregistrée dans l'historique. Anthony recevra une alerte dans Orbit.</p>
+    <label>Note interne (optionnel)</label>
+    <input type="text" id="validate-note" placeholder="Ex : Vérifier le lien parrainage avant envoi" />
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-validate')">Annuler</button>
+      <button class="btn btn-gold" onclick="validateNewsletter()">Valider ✓</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBB8W9PXEb0DEXXuEQsSuNvMTm-bjYIF9U",
+  authDomain: "orbit-liberty.firebaseapp.com",
+  projectId: "orbit-liberty",
+  storageBucket: "orbit-liberty.firebasestorage.app",
+  messagingSenderId: "263089637389",
+  appId: "1:263089637389:web:8ecbcc2b587f37b4266d44"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window._articles = [];
+window._newsletters = [];
+window._currentHtml = '';
+window._notifications = JSON.parse(localStorage.getItem('nl_notifs') || '[]');
+
+// ——— UTILS ———
+window.showToast = (msg) => {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+};
+window.openModal = (id) => document.getElementById(id).classList.add('open');
+window.closeModal = (id) => document.getElementById(id).classList.remove('open');
+
+function currentMonth() {
+  return new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+}
+
+// ——— NOTIFICATIONS ———
+function pushNotif(title, msg) {
+  const notif = { title, msg, time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }), id: Date.now() };
+  window._notifications.unshift(notif);
+  if (window._notifications.length > 20) window._notifications.pop();
+  localStorage.setItem('nl_notifs', JSON.stringify(window._notifications));
+  renderNotifs();
+}
+
+function renderNotifs() {
+  const list = document.getElementById('notif-list');
+  const dot = document.getElementById('notif-dot');
+  if (!window._notifications.length) {
+    list.innerHTML = '<div class="notif-empty">Aucune notification</div>';
+    dot.classList.remove('show');
+    return;
+  }
+  dot.classList.add('show');
+  list.innerHTML = window._notifications.map(n => `
+    <div class="notif-item">
+      <div class="notif-item-title">${n.title}</div>
+      <div class="notif-item-msg">${n.msg}</div>
+      <div class="notif-item-time">${n.time}</div>
+    </div>
+  `).join('');
+}
+
+window.toggleNotifPanel = () => {
+  const panel = document.getElementById('notif-panel');
+  panel.classList.toggle('open');
+};
+
+window.clearNotifs = () => {
+  window._notifications = [];
+  localStorage.removeItem('nl_notifs');
+  renderNotifs();
+  document.getElementById('notif-panel').classList.remove('open');
+};
+
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('notif-panel');
+  if (!e.target.closest('.notif-badge') && !e.target.closest('.notif-panel')) {
+    panel.classList.remove('open');
+  }
+});
+
+// ——— NAVIGATION ———
+window.goToStep = (n) => {
+  document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + n).classList.add('active');
+  document.getElementById('step-tab-' + n).classList.add('active');
+  if (n === 2) refreshStep2();
+  if (n === 4) renderHistory();
+};
+
+// ——— VEILLE AUTO ———
+window.lancerVeille = async () => {
+  const btn = document.getElementById('btn-veille');
+  const spinner = document.getElementById('veille-spinner');
+  btn.disabled = true;
+  spinner.classList.add('show');
+
+  const msgs = ['Recherche en cours…', 'Analyse des sources…', 'Ajout à la réserve…'];
+  let mi = 0;
+  const iv = setInterval(() => { mi = (mi+1)%msgs.length; document.getElementById('veille-msg').textContent = msgs[mi]; }, 2500);
+
+  const prompt = `Tu es un assistant de veille immobilière pour une agence à Pont-Sainte-Maxence (Oise, 60), secteur Hauts-de-France.
+
+Génère 4 articles d'actualité immobilière récents et pertinents pour des propriétaires bailleurs dans ce secteur (${currentMonth()}).
+Couvre des sujets variés : marché locatif local, réglementation (DPE, loyers, diagnostics), fiscalité bailleur, opportunités d'investissement dans l'Oise.
+
+Réponds UNIQUEMENT en JSON valide, sans aucun texte avant ou après, sous ce format exact :
+[
+  {
+    "title": "Titre accrocheur de l'article",
+    "tag": "Marché local",
+    "summary": "Résumé en 2-3 phrases claires et concrètes pour un bailleur non-expert.",
+    "source": "Nom de la source"
+  }
+]
+
+Les tags possibles : Marché local, Réglementation, Fiscalité, Opportunité patrimoine, Conseil pratique, Travaux & DPE.
+Assure-toi que chaque article est distinct et apporte une vraie valeur au bailleur.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    clearInterval(iv);
+    spinner.classList.remove('show');
+    btn.disabled = false;
+
+    const raw = data.content?.[0]?.text || '[]';
+    const clean = raw.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
+    const articles = JSON.parse(clean);
+
+    let added = 0;
+    for (const a of articles) {
+      const article = { title: a.title, summary: a.summary, tag: a.tag, source: a.source, selected: false, auto: true, createdAt: serverTimestamp() };
+      const ref = await addDoc(collection(db, 'newsletter_articles'), article);
+      window._articles.unshift({ id: ref.id, ...article, createdAt: new Date() });
+      added++;
+    }
+
+    renderArticles();
+    const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('veille-last').textContent = `Dernière veille : aujourd'hui à ${now} · ${added} articles ajoutés`;
+    pushNotif('Veille terminée ✓', `${added} nouveaux articles ajoutés à la réserve pour ${currentMonth()}.`);
+    showToast(`${added} articles ajoutés à la réserve ✓`);
+
+  } catch(e) {
+    clearInterval(iv);
+    spinner.classList.remove('show');
+    btn.disabled = false;
+    showToast('Erreur veille : ' + e.message);
+  }
+};
+
+// ——— ARTICLES MANUELS ———
+async function loadArticles() {
+  try {
+    const q = query(collection(db, 'newsletter_articles'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    window._articles = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderArticles();
+  } catch(e) { renderArticles(); }
+}
+
+window.addArticle = async () => {
+  const title = document.getElementById('art-title').value.trim();
+  const summary = document.getElementById('art-summary').value.trim();
+  const tag = document.getElementById('art-tag').value;
+  const source = document.getElementById('art-source').value.trim();
+  if (!title || !summary) { showToast('Titre et résumé requis'); return; }
+  const article = { title, summary, tag, source, selected: false, auto: false, createdAt: serverTimestamp() };
+  try {
+    const ref = await addDoc(collection(db, 'newsletter_articles'), article);
+    window._articles.unshift({ id: ref.id, ...article, createdAt: new Date() });
+    document.getElementById('art-title').value = '';
+    document.getElementById('art-summary').value = '';
+    document.getElementById('art-source').value = '';
+    renderArticles();
+    showToast('Article ajouté ✓');
+  } catch(e) { showToast('Erreur : ' + e.message); }
+};
+
+window.toggleSelect = async (id) => {
+  const a = window._articles.find(x => x.id === id);
+  if (!a) return;
+  const selected = window._articles.filter(x => x.selected);
+  if (!a.selected && selected.length >= 3) { showToast('Maximum 3 articles sélectionnés'); return; }
+  a.selected = !a.selected;
+  try { await updateDoc(doc(db, 'newsletter_articles', id), { selected: a.selected }); } catch(e) {}
+  renderArticles();
+};
+
+window.deleteArticle = async (id) => {
+  try {
+    await deleteDoc(doc(db, 'newsletter_articles', id));
+    window._articles = window._articles.filter(x => x.id !== id);
+    renderArticles();
+    showToast('Article supprimé');
+  } catch(e) { showToast('Erreur suppression'); }
+};
+
+function renderArticles() {
+  const list = document.getElementById('articles-list');
+  const sel = window._articles.filter(x => x.selected);
+  document.getElementById('selected-count').textContent = sel.length;
+  if (!window._articles.length) {
+    list.innerHTML = `<div class="empty-state"><div style="font-size:32px">📋</div><p>Aucun article dans la réserve ce mois-ci.<br>Lancez la veille automatique ou ajoutez un article manuellement.</p></div>`;
+    return;
+  }
+  list.innerHTML = window._articles.map(a => `
+    <div class="article-item ${a.selected ? 'selected' : ''} ${a.auto ? 'auto-added' : ''}">
+      <div class="article-check" onclick="toggleSelect('${a.id}')">${a.selected ? '✓' : ''}</div>
+      <div class="article-content">
+        <div>
+          <span class="article-tag-badge">${a.tag}</span>
+          ${a.auto ? '<span class="auto-badge">✨ Veille auto</span>' : ''}
+        </div>
+        <div class="article-title">${a.title}</div>
+        <div class="article-summary">${a.summary}</div>
+        ${a.source ? `<div class="article-date">Source : ${a.source}</div>` : ''}
+      </div>
+      <div class="article-delete" onclick="deleteArticle('${a.id}')" title="Supprimer">×</div>
+    </div>
+  `).join('');
+}
+
+// ——— STEP 2 ———
+function refreshStep2() {
+  const sel = window._articles.filter(x => x.selected);
+  document.getElementById('gen-count').textContent = sel.length;
+  document.getElementById('gen-month').textContent = currentMonth();
+  document.getElementById('gen-articles-preview').innerHTML = sel.length
+    ? sel.map(a => `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid #f0f0ee;"><span style="font-size:11px;background:#f0f0ee;color:#666;padding:2px 8px;border-radius:4px;white-space:nowrap">${a.tag}</span><span style="font-size:14px;font-weight:500">${a.title}</span></div>`).join('')
+    : `<p style="font-size:13px;color:#aaa">Aucun article sélectionné. Retournez à l'étape 1.</p>`;
+}
+
+// ——— GÉNÉRATION ———
+window.generateNewsletter = async () => {
+  const selected = window._articles.filter(x => x.selected);
+  if (!selected.length) { showToast('Sélectionnez au moins 1 article'); return; }
+  const motJessica = document.getElementById('mot-jessica').value.trim();
+  document.getElementById('btn-generate').disabled = true;
+  document.getElementById('generating-state').style.display = 'block';
+  const msgs = ['Claude rédige votre newsletter…', 'Mise en forme des rubriques…', 'Dernière relecture…'];
+  let mi = 0;
+  const iv = setInterval(() => { mi=(mi+1)%msgs.length; document.getElementById('generating-msg').textContent = msgs[mi]; }, 3000);
+
+  const articlesText = selected.map((a,i) => `Article ${i+1} — Rubrique: ${a.tag}\nTitre: ${a.title}\nRésumé: ${a.summary}${a.source?'\nSource: '+a.source:''}`).join('\n\n');
+  const motInstruction = motJessica ? `Mot de Jessica (reformuler légèrement si besoin) : "${motJessica}"` : `Génère un mot de Jessica Beauvillain chaleureux et professionnel, en lien avec les sujets du mois.`;
+  const mois = currentMonth();
+
+  const prompt = `Tu es rédacteur d'une newsletter mensuelle pour les bailleurs de Century 21 Agence Collin, Pont-Sainte-Maxence (Oise 60).
+
+Génère une newsletter HTML complète autonome (avec DOCTYPE, head, body, styles dans un tag style) en français, ton chaleureux et professionnel.
+
+ÉDITION : ${mois}
+AGENCE : Century 21 – Agence Collin
+SIGNATAIRE : Jessica Beauvillain, Directrice du pôle gestion locative
+
+${motInstruction}
+
+ARTICLES À TRAITER :
+${articlesText}
+
+STRUCTURE EXACTE À RESPECTER :
+
+1. HEADER fond noir #111, décoration cercle doré en arrière-plan :
+   - Gauche : CENTURY 21 en 10px espacé doré #c4a048, Agence Collin en 18px blanc, trait doré 28px, Pont-Sainte-Maxence Oise en gris
+   - Droite : badge arrondi avec mois en doré et année en gris
+   - Dessous : titre Votre lettre bailleur du mois en 24px blanc, sous-titre Marché Réglementation Conseils en gris
+
+2. BANDE DORÉE 2px dégradé #c4a048 vers #e8cf7a vers #c4a048
+
+3. ENCART MOT DE JESSICA : fond #f9f9f8, bordure fine, flex avec avatar cercle 40px fond noir bordure dorée initiales JB en doré, texte italique gris, signature + titre
+
+4. STATS : grille 3 colonnes fond noir, chiffres dorés 20px, libellés blancs 10px. Extraire 3 chiffres clés des articles.
+
+5. ARTICLES : pour chaque article :
+   - Ligne tag : badge arrondi fond #f5f5f3 + ligne horizontale fine qui s'étend
+   - Accroche 15px semi-gras avec 1-2 mots clés en doré #c4a048
+   - Layout 2 colonnes (texte + highlight box) SAUF dernier article en pleine largeur
+   - Article réglementation : blockquote avec bordure gauche 2px dorée, texte italique
+   - Highlight box : fond #f9f9f8, chiffre 18px, libellé 10px gris, min-width 80px
+   - Texte 13px #555, 80-100 mots, line-height 1.75
+   - Séparateurs ligne fine #e5e5e5 entre articles
+
+6. BLOC PARRAINAGE : fond noir #111, border-radius 12px, titre blanc, texte gris, bouton doré Découvrir l'offre
+
+7. FOOTER flex space-between : point doré + Century 21 Agence Collin à gauche, adresse + désinscription à droite en 11px gris
+
+COULEURS : #111 noir, #c4a048 or, #fff blanc, #1a1a1a texte, #555 secondaire, #e5e5e5 bordures, #f5f5f3 fond
+FONT : -apple-system BlinkMacSystemFont sans-serif. MAX-WIDTH 640px centré.
+
+Retourne UNIQUEMENT le code HTML complet, sans commentaires ni backticks.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 4000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    clearInterval(iv);
+    document.getElementById('generating-state').style.display = 'none';
+    document.getElementById('btn-generate').disabled = false;
+    const raw = data.content?.[0]?.text || '';
+    const clean = raw.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim();
+    window._currentHtml = clean;
+    document.getElementById('preview-iframe').srcdoc = clean;
+    goToStep(3);
+    showToast('Newsletter générée ✓');
+  } catch(e) {
+    clearInterval(iv);
+    document.getElementById('generating-state').style.display = 'none';
+    document.getElementById('btn-generate').disabled = false;
+    showToast('Erreur : ' + e.message);
+  }
+};
+
+// ——— DOWNLOAD ———
+window.downloadNewsletter = () => {
+  if (!window._currentHtml) return;
+  const blob = new Blob([window._currentHtml], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `newsletter-century21-${currentMonth().replace(' ','-')}.html`;
+  a.click();
+};
+
+// ——— VALIDATION ———
+window.validateNewsletter = async () => {
+  const note = document.getElementById('validate-note').value.trim();
+  const selected = window._articles.filter(x => x.selected);
+  try {
+    await addDoc(collection(db, 'newsletter_history'), {
+      month: currentMonth(),
+      status: 'validated',
+      note,
+      htmlContent: window._currentHtml,
+      articles: selected.map(a => a.title),
+      validatedBy: 'Jessica Beauvillain',
+      createdAt: serverTimestamp()
+    });
+    for (const a of selected) {
+      a.selected = false;
+      try { await updateDoc(doc(db, 'newsletter_articles', a.id), { selected: false }); } catch(e) {}
+    }
+    closeModal('modal-validate');
+    pushNotif('Newsletter validée ✓', `La newsletter de ${currentMonth()} a été validée par Jessica. Elle est prête à l'envoi.`);
+    showToast('Newsletter validée et enregistrée ✓');
+    goToStep(4);
+    await loadHistory();
+  } catch(e) { showToast('Erreur : ' + e.message); }
+};
+
+// ——— HISTORIQUE ———
+async function loadHistory() {
+  try {
+    const q = query(collection(db, 'newsletter_history'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    window._newsletters = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) {}
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  if (!window._newsletters.length) {
+    list.innerHTML = `<div class="empty-state"><div style="font-size:32px">📬</div><p>Aucune newsletter générée pour l'instant.</p></div>`;
+    return;
+  }
+  const sl = { draft:'status-draft', validated:'status-validated', sent:'status-sent' };
+  const lb = { draft:'Brouillon', validated:'Validée ✓', sent:'Envoyée' };
+  list.innerHTML = window._newsletters.map(n => `
+    <div class="history-item">
+      <div class="history-meta">
+        <div class="history-month">${n.month}</div>
+        <div class="history-note">${n.note || ''}</div>
+      </div>
+      <span class="history-status ${sl[n.status]||'status-draft'}">${lb[n.status]||n.status}</span>
+    </div>
+  `).join('');
+}
+
+// INIT
+loadArticles();
+loadHistory();
+renderNotifs();
+</script>
+</body>
+</html>
