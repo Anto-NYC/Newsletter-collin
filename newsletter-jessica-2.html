@@ -435,14 +435,10 @@ Les tags possibles : Marché local, Réglementation, Fiscalité, Opportunité pa
 Assure-toi que chaque article est distinct et apporte une vraie valeur au bailleur.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
+      body: JSON.stringify({ prompt })
     });
     const data = await res.json();
     clearInterval(iv);
@@ -617,10 +613,10 @@ FONT : -apple-system BlinkMacSystemFont sans-serif. MAX-WIDTH 640px centré.
 Retourne UNIQUEMENT le code HTML complet, sans commentaires ni backticks.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 4000, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ prompt })
     });
     const data = await res.json();
     clearInterval(iv);
