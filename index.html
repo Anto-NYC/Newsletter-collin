@@ -579,12 +579,15 @@ window.generateNewsletter = async () => {
 
   const articlesText = selected.map((a,i) => `Article ${i+1} — Rubrique: ${a.tag}\nTitre: ${a.title}\nRésumé: ${a.summary}${a.source?'\nSource: '+a.source:''}`).join('\n\n');
   const offreInstruction = offreTitre && offreDescription
-    ? `\n\nOFFRE PROMOTIONNELLE DU MOIS - BLOC OBLIGATOIRE À INTÉGRER :
+    ? `\n\nOFFRE PROMOTIONNELLE DU MOIS - BLOC OBLIGATOIRE À INTÉGRER APRÈS LE BLOC PARRAINAGE :
 Titre : ${offreTitre}
 Description : ${offreDescription}
 ${offreValidite ? 'Validité : ' + offreValidite : ''}
-Intègre cette offre dans un bloc visuel distinct, APRÈS le bloc parrainage et AVANT le footer.
-Style : fond doré #c4a048, texte noir #111, titre en gras 15px, description 13px, badge "OFFRE DU MOIS" en haut du bloc.`
+
+Crée un bloc offre avec :
+1. Un visuel SVG illustratif en haut du bloc (largeur 100%, hauteur 120px) : composition graphique noir #111 et or #c4a048, avec une forme géométrique décorative (cercles, losanges ou lignes dorées), le titre de l'offre centré en grand et un sous-titre court accrocheur lié au contenu de l'offre. Style premium et moderne.
+2. Sous le SVG : fond doré #c4a048, padding 1.5rem, badge "OFFRE DU MOIS" en noir sur fond noir/30%, titre en noir 16px gras, description en noir/80% 13px, validité en petit italique noir/60%.
+Style global : border-radius 12px, overflow hidden, ombre légère.`
     : '';
 
   const motInstruction = motJessica ? `MOT DE JESSICA - REPRODUCTION EXACTE OBLIGATOIRE : Utilise exactement ce texte mot pour mot, sans aucune modification, reformulation ou interprétation : "${motJessica}"` : `Génère un mot de Jessica Beauvillain chaleureux et professionnel, en lien avec les sujets du mois.`;
@@ -625,9 +628,9 @@ STRUCTURE EXACTE À RESPECTER :
    - Texte 13px #555, 80-100 mots, line-height 1.75
    - Séparateurs ligne fine #e5e5e5 entre articles
 
-6. BLOC PARRAINAGE : fond noir #111, border-radius 12px, titre blanc, texte gris, bouton doré Découvrir l'offre
+6. BLOC PARRAINAGE : fond noir #111, border-radius 12px, titre blanc, texte gris, bouton doré 'Nous contacter' avec href='https://www.century21-ac-pont-ste-maxence.com' target='_blank'
 
-7. FOOTER flex space-between : point doré + Century 21 Agence Collin à gauche, adresse + désinscription à droite en 11px gris
+7. FOOTER flex space-between : point doré + Century 21 Agence Collin à gauche, adresse exacte '79 avenue Jean Jaurès, 60700 Pont-Sainte-Maxence' + lien 'Se désinscrire' à droite en 11px gris
 
 COULEURS : #111 noir, #c4a048 or, #fff blanc, #1a1a1a texte, #555 secondaire, #e5e5e5 bordures, #f5f5f3 fond
 FONT : -apple-system BlinkMacSystemFont sans-serif. MAX-WIDTH 640px centré.
