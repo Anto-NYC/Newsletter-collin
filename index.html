@@ -565,7 +565,7 @@ window.generateNewsletter = async () => {
   const iv = setInterval(() => { mi=(mi+1)%msgs.length; document.getElementById('generating-msg').textContent = msgs[mi]; }, 3000);
 
   const articlesText = selected.map((a,i) => `Article ${i+1} — Rubrique: ${a.tag}\nTitre: ${a.title}\nRésumé: ${a.summary}${a.source?'\nSource: '+a.source:''}`).join('\n\n');
-  const motInstruction = motJessica ? `Mot de Jessica (reformuler légèrement si besoin) : "${motJessica}"` : `Génère un mot de Jessica Beauvillain chaleureux et professionnel, en lien avec les sujets du mois.`;
+  const motInstruction = motJessica ? `MOT DE JESSICA - REPRODUCTION EXACTE OBLIGATOIRE : Utilise exactement ce texte mot pour mot, sans aucune modification, reformulation ou interprétation : "${motJessica}"` : `Génère un mot de Jessica Beauvillain chaleureux et professionnel, en lien avec les sujets du mois.`;
   const mois = currentMonth();
 
   const prompt = `Tu es rédacteur d'une newsletter mensuelle pour les bailleurs de Century 21 Agence Collin, Pont-Sainte-Maxence (Oise 60).
