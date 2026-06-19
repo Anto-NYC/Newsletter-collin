@@ -585,8 +585,8 @@ Description : ${offreDescription}
 ${offreValidite ? 'Validité : ' + offreValidite : ''}
 
 Crée un bloc offre avec :
-1. Un visuel SVG illustratif en haut du bloc (largeur 100%, hauteur 120px) : composition graphique noir #111 et or #c4a048, avec une forme géométrique décorative (cercles, losanges ou lignes dorées), le titre de l'offre centré en grand et un sous-titre court accrocheur lié au contenu de l'offre. Style premium et moderne.
-2. Sous le SVG : fond doré #c4a048, padding 1.5rem, badge "OFFRE DU MOIS" en noir sur fond noir/30%, titre en noir 16px gras, description en noir/80% 13px, validité en petit italique noir/60%.
+1. Un visuel SVG illustratif en haut du bloc (largeur 100%, hauteur 120px) : composition graphique #252526 (Obsessed Grey) et #BEAF88 (Relentless Gold), avec une forme géométrique décorative (cercles, losanges ou lignes dorées), le titre de l'offre centré en grand et un sous-titre court accrocheur lié au contenu de l'offre. Style premium et moderne.
+2. Sous le SVG : fond #BEAF88 (Relentless Gold), padding 1.5rem, badge "OFFRE DU MOIS" en #252526 sur fond #252526/20%, titre en #252526 16px gras, description en #252526/80% 13px, validité en petit italique #252526/60%.
 Style global : border-radius 12px, overflow hidden, ombre légère.`
     : '';
 
@@ -608,12 +608,12 @@ ${articlesText}
 
 STRUCTURE EXACTE À RESPECTER :
 
-1. HEADER fond noir #111, décoration cercle doré en arrière-plan :
-   - Gauche : CENTURY 21 en 10px espacé doré #c4a048, Agence Collin en 18px blanc, trait doré 28px, Pont-Sainte-Maxence Oise en gris
+1. HEADER fond #252526 (Obsessed Grey), décoration cercle doré en arrière-plan, badge logo "C21" en haut à droite du header (avant le badge mois/année) : carré arrondi fond #BEAF88, texte "C21" en #252526 bold 14px, centré, taille ~40x40px :
+   - Gauche : CENTURY 21 en 10px espacé #BEAF88, Agence Collin en 18px blanc, trait #BEAF88 28px, Pont-Sainte-Maxence Oise en gris
    - Droite : badge arrondi avec mois en doré et année en gris
-   - Dessous : titre Votre lettre bailleur du mois en 24px blanc, sous-titre Marché Réglementation Conseils en gris
+   - Dessous : titre Votre rendez-vous bailleur du mois en 24px blanc, sous-titre Marché Réglementation Conseils en gris
 
-2. BANDE DORÉE 2px dégradé #c4a048 vers #e8cf7a vers #c4a048
+2. BANDE 2px dégradé #BEAF88 vers #d4c9a8 vers #BEAF88
 
 3. ENCART MOT DE JESSICA : fond #f9f9f8, bordure fine, flex avec avatar cercle 40px fond noir bordure dorée initiales JB en doré, texte italique gris, signature + titre
 
@@ -621,18 +621,18 @@ STRUCTURE EXACTE À RESPECTER :
 
 5. ARTICLES : pour chaque article :
    - Ligne tag : badge arrondi fond #f5f5f3 + ligne horizontale fine qui s'étend
-   - Accroche 15px semi-gras avec 1-2 mots clés en doré #c4a048
+   - Accroche 15px semi-gras avec 1-2 mots clés en #BEAF88
    - Layout 2 colonnes (texte + highlight box) SAUF dernier article en pleine largeur
    - Article réglementation : blockquote avec bordure gauche 2px dorée, texte italique
    - Highlight box : fond #f9f9f8, chiffre 18px, libellé 10px gris, min-width 80px
    - Texte 13px #555, 80-100 mots, line-height 1.75
    - Séparateurs ligne fine #e5e5e5 entre articles
 
-6. BLOC PARRAINAGE : fond noir #111, border-radius 12px, titre blanc, texte gris, bouton doré 'Nous contacter' avec href='https://www.century21-ac-pont-ste-maxence.com' target='_blank'
+6. BLOC PARRAINAGE : fond #252526 (Obsessed Grey), border-radius 12px, titre blanc, texte gris, bouton fond #BEAF88 texte #252526 'Nous contacter' avec href='https://www.century21-ac-pont-ste-maxence.com' target='_blank'
 
 7. FOOTER flex space-between : point doré + Century 21 Agence Collin à gauche, adresse exacte '79 avenue Jean Jaurès, 60700 Pont-Sainte-Maxence' + lien 'Se désinscrire' à droite en 11px gris
 
-COULEURS : #111 noir, #c4a048 or, #fff blanc, #1a1a1a texte, #555 secondaire, #e5e5e5 bordures, #f5f5f3 fond
+COULEURS OFFICIELLES CENTURY 21 (à respecter strictement) : #252526 (Obsessed Grey, remplace le noir), #BEAF88 (Relentless Gold, remplace l'or), #fff blanc, #1a1a1a texte, #555 secondaire, #e5e5e5 bordures, #f5f5f3 fond
 FONT : -apple-system BlinkMacSystemFont sans-serif. MAX-WIDTH 640px centré.
 
 ${offreInstruction}
