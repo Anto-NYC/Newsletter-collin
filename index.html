@@ -264,6 +264,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
       <div class="card-sub">Ce texte apparaîtra dans l'encart signé de votre nom. Laissez vide pour que Claude en génère un automatiquement.</div>
       <textarea class="mot-jessica" id="mot-jessica" placeholder="Ex : Ce mois-ci, nous souhaitons attirer votre attention sur…"></textarea>
     </div>
+    <div class="card">
+      <div class="card-title">Offre promotionnelle du mois <span style="font-size:12px;font-weight:400;color:#aaa;margin-left:8px;">optionnel</span></div>
+      <div class="card-sub">Si vous avez une offre spéciale ce mois-ci, renseignez-la ici. Elle apparaîtra dans un bloc dédié dans la newsletter.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <input type="text" id="offre-titre" placeholder="Titre de l'offre (ex : Offre de bienvenue)" style="padding:9px 12px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa;outline:none;" />
+        <input type="text" id="offre-validite" placeholder="Validité (ex : Offre valable en juin 2026)" style="padding:9px 12px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa;outline:none;" />
+        <textarea id="offre-description" placeholder="Description de l'offre en 1-2 phrases…" style="grid-column:1/-1;padding:9px 12px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa;outline:none;min-height:70px;resize:vertical;"></textarea>
+      </div>
+    </div>
+
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button class="btn btn-outline" onclick="goToStep(1)">← Retour</button>
       <button class="btn btn-gold" onclick="generateNewsletter()" id="btn-generate">✨ Générer la newsletter</button>
@@ -558,6 +568,9 @@ window.generateNewsletter = async () => {
   const selected = window._articles.filter(x => x.selected);
   if (!selected.length) { showToast('Sélectionnez au moins 1 article'); return; }
   const motJessica = document.getElementById('mot-jessica').value.trim();
+  const offreTitre = document.getElementById('offre-titre').value.trim();
+  const offreDescription = document.getElementById('offre-description').value.trim();
+  const offreValidite = document.getElementById('offre-validite').value.trim();
   document.getElementById('btn-generate').disabled = true;
   document.getElementById('generating-state').style.display = 'block';
   const msgs = ['Claude rédige votre newsletter…', 'Mise en forme des rubriques…', 'Dernière relecture…'];
@@ -565,6 +578,15 @@ window.generateNewsletter = async () => {
   const iv = setInterval(() => { mi=(mi+1)%msgs.length; document.getElementById('generating-msg').textContent = msgs[mi]; }, 3000);
 
   const articlesText = selected.map((a,i) => `Article ${i+1} — Rubrique: ${a.tag}\nTitre: ${a.title}\nRésumé: ${a.summary}${a.source?'\nSource: '+a.source:''}`).join('\n\n');
+  const offreInstruction = offreTitre && offreDescription
+    ? `\n\nOFFRE PROMOTIONNELLE DU MOIS - BLOC OBLIGATOIRE À INTÉGRER :
+Titre : ${offreTitre}
+Description : ${offreDescription}
+${offreValidite ? 'Validité : ' + offreValidite : ''}
+Intègre cette offre dans un bloc visuel distinct, APRÈS le bloc parrainage et AVANT le footer.
+Style : fond doré #c4a048, texte noir #111, titre en gras 15px, description 13px, badge "OFFRE DU MOIS" en haut du bloc.`
+    : '';
+
   const motInstruction = motJessica ? `MOT DE JESSICA - REPRODUCTION EXACTE OBLIGATOIRE : Utilise exactement ce texte mot pour mot, sans aucune modification, reformulation ou interprétation : "${motJessica}"` : `Génère un mot de Jessica Beauvillain chaleureux et professionnel, en lien avec les sujets du mois.`;
   const mois = currentMonth();
 
@@ -609,6 +631,8 @@ STRUCTURE EXACTE À RESPECTER :
 
 COULEURS : #111 noir, #c4a048 or, #fff blanc, #1a1a1a texte, #555 secondaire, #e5e5e5 bordures, #f5f5f3 fond
 FONT : -apple-system BlinkMacSystemFont sans-serif. MAX-WIDTH 640px centré.
+
+${offreInstruction}
 
 Retourne UNIQUEMENT le code HTML complet, sans commentaires ni backticks.`;
 
