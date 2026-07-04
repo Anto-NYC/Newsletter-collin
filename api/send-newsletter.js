@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   const { htmlContent, subject, recipients } = req.body;
   if (!htmlContent || !recipients || !recipients.length) {
-    return res.status(400).json({ error: 'Données manquantes' });
+    return res.status(400).json({ error: 'Donnees manquantes' });
   }
 
   try {
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         sender: {
           name: 'Century 21 – Agence Collin',
-          email: 'jessica.beauvillain@century21.fr'
+          email: 'agencecollin@century21.fr'
         },
         to: recipients.map(email => ({ email })),
         subject: subject || `Votre rendez-vous bailleur – ${new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}`,
