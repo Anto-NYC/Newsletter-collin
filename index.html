@@ -289,6 +289,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <div class="preview-actions">
       <button class="btn btn-outline" onclick="goToStep(2)">← Regénérer</button>
       <button class="btn btn-outline" onclick="downloadNewsletter()">⬇ Télécharger HTML</button>
+      <button class="btn btn-outline" onclick="openModal('modal-send-test')" style="background:#f0faf0;color:#2d6a2d;border-color:#b0d8b0;">✉ Envoyer test (3 adresses)</button>
       <button class="btn btn-gold" onclick="openModal('modal-validate')" style="margin-left:auto;">✓ Valider la newsletter</button>
     </div>
     <div class="preview-frame">
@@ -305,6 +306,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     </div>
   </div>
 
+</div>
+
+<!-- MODAL ENVOI TEST -->
+<div class="modal-overlay" id="modal-send-test">
+  <div class="modal">
+    <h3>Envoyer le test</h3>
+    <p>La newsletter sera envoyée aux 3 adresses de test suivantes :</p>
+    <div style="background:#f9f9f8;border-radius:8px;padding:12px;margin-bottom:1.25rem;font-size:13px;color:#555;line-height:1.8;">
+      ✉ anto60@live.fr<br>
+      ✉ jessica.beauvillain@century21.fr<br>
+      ✉ nicollet.audret@gmail.com
+    </div>
+    <label>Objet de l'email (optionnel)</label>
+    <input type="text" id="test-subject" placeholder="Ex : Votre rendez-vous bailleur – Juillet 2026" />
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-send-test')">Annuler</button>
+      <button class="btn btn-gold" onclick="sendTestNewsletter()" id="btn-send-test">Envoyer ✉</button>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL VALIDER -->
@@ -685,6 +705,43 @@ window.downloadNewsletter = () => {
 };
 
 // ——— VALIDATION ———
+window.sendTestNewsletter = async () => {
+  if (!window._currentHtml) { showToast('Aucune newsletter à envoyer'); return; }
+  const btn = document.getElementById('btn-send-test');
+  btn.disabled = true;
+  btn.textContent = '⏳ Envoi en cours...';
+  const subject = document.getElementById('test-subject').value.trim() ||
+    `Votre rendez-vous bailleur – ${currentMonth()}`;
+  try {
+    const res = await fetch('/api/send-newsletter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        htmlContent: window._currentHtml,
+        subject,
+        recipients: [
+          'anto60@live.fr',
+          'jessica.beauvillain@century21.fr',
+          'nicollet.audret@gmail.com'
+        ]
+      })
+    });
+    const data = await res.json();
+    btn.disabled = false;
+    btn.textContent = 'Envoyer ✉';
+    closeModal('modal-send-test');
+    if (data.success) {
+      showToast('✅ Newsletter envoyée aux 3 adresses de test !');
+    } else {
+      showToast('Erreur : ' + (data.error || 'Erreur inconnue'));
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Envoyer ✉';
+    showToast('Erreur envoi : ' + e.message);
+  }
+};
+
 window.validateNewsletter = async () => {
   const note = document.getElementById('validate-note').value.trim();
   const selected = window._articles.filter(x => x.selected);
