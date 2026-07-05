@@ -17,8 +17,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         sender: {
-          name: 'Century 21 – Agence Collin',
-          email: 'agencecollin@century21.fr'
+          name: 'J&L Associés – Newsletter Bailleurs',
+          email: 'anto60@live.fr'
         },
         to: recipients.map(email => ({ email })),
         subject: subject || `Votre rendez-vous bailleur – ${new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}`,
