@@ -606,6 +606,7 @@ ${offreValidite ? 'Validité : ' + offreValidite : ''}
 
 Crée un bloc offre avec :
 1. Un visuel SVG illustratif en haut du bloc (largeur 100%, hauteur 120px) : composition graphique #252526 (Obsessed Grey) et #BEAF88 (Relentless Gold), avec une forme géométrique décorative (cercles, losanges ou lignes dorées), le titre de l'offre centré en grand et un sous-titre court accrocheur lié au contenu de l'offre. Style premium et moderne.
+   CONTRAINTES TECHNIQUES OBLIGATOIRES pour ce SVG (anti-débordement mobile/Windows) : viewBox="0 0 600 120" EXACTEMENT, attributs HTML width="100%" height="120" (en plus du style), preserveAspectRatio="xMidYMid meet", et l'envelopper dans <div style="width:100%;overflow:hidden;line-height:0;">...</div>. Aucun texte ni élément ne doit dépasser les bornes du viewBox.
 2. Sous le SVG : fond #BEAF88 (Relentless Gold), padding 1.5rem, badge "OFFRE DU MOIS" en #252526 sur fond #252526/20%, titre en #252526 16px gras, description en #252526/80% 13px, validité en petit italique #252526/60%.
 Style global : border-radius 12px, overflow hidden, ombre légère.`
     : '';
@@ -628,7 +629,18 @@ ${articlesText}
 
 STRUCTURE EXACTE À RESPECTER :
 
-1. HEADER fond #252526 (Obsessed Grey), décoration cercle doré en arrière-plan, logo Century 21 (le "C" emblème officiel) en haut à droite du header, AVANT le badge mois/année, reproduit en SVG inline EXACTEMENT comme suit, sans aucune modification du path (copier-coller tel quel, ne change que l'attribut style de positionnement si besoin) :
+1. HEADER — STRUCTURE EN TABLE HTML OBLIGATOIRE (jamais de flexbox ni de grid : Outlook desktop ne les supporte pas et ça casse la mise en page sur Windows) :
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#252526;">
+  <tr>
+    <td class="h-brand" style="padding:20px 12px 0 20px;vertical-align:top;">CENTURY 21 en 10px espacé #BEAF88, Agence Collin en 18px blanc, trait #BEAF88 28px, Pont-Sainte-Maxence Oise en gris</td>
+    <td class="h-badge" align="right" valign="top" width="90" style="padding:20px 20px 0 0;white-space:nowrap;">le logo SVG ci-dessous PUIS le badge mois/année arrondi (mois doré, année gris)</td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding:8px 20px 20px 20px;">titre Votre rendez-vous bailleur du mois en 24px blanc, sous-titre Marché Réglementation Conseils en gris</td>
+  </tr>
+</table>
+Décoration cercle doré en arrière-plan du header (positionné en CSS background, jamais en position:absolute qui casse Outlook).
+Logo Century 21 (le "C" emblème officiel), reproduit en SVG inline EXACTEMENT comme suit, sans aucune modification du path (copier-coller tel quel) :
 <svg viewBox="0 0 999.99999 1273.6516" width="36" height="46" xmlns="http://www.w3.org/2000/svg">
 <g transform="matrix(1.8902581,0,0,1.8902581,-3.3545016e-6,310.64015)">
 <polygon points="331.09,364.76 373.11,364.76 373.11,144.7 324.1,144.7 324.1,144.7 323.63,144.7 294.53,186.72 331.09,186.72" fill="#BEAF88" transform="matrix(1.3225707,0,0,1.3225707,0,-164.33698)"/>
@@ -636,21 +648,26 @@ STRUCTURE EXACTE À RESPECTER :
 <path d="m 286.44418,262.4719 89.5587,0 -37.78258,55.27451 -157.4274,0 116.84612,-168.62224 c 0,0 12.8622,-16.81674 12.8622,-31.75045 0,-21.300834 -17.91643,-34.696367 -36.365,-34.696367 -23.91627,0 -36.66945,19.671847 -36.66945,34.961337 l 0,4.89774 -55.27451,0 0,-4.60429 c 0,-41.782111 33.94437,-90.620891 92.46793,-90.620891 50.75523,0 91.17871,40.901528 91.17871,92.765471 0,31.67285 -19.22247,55.63519 -19.22247,55.63519 z" fill="#BEAF88"/>
 </g>
 </svg>
-Ce logo doit être placé juste à gauche du badge mois/année dans le header, aligné verticalement avec lui :
-   - Gauche : CENTURY 21 en 10px espacé #BEAF88, Agence Collin en 18px blanc, trait #BEAF88 28px, Pont-Sainte-Maxence Oise en gris
-   - Droite : badge arrondi avec mois en doré et année en gris
-   - Dessous : titre Votre rendez-vous bailleur du mois en 24px blanc, sous-titre Marché Réglementation Conseils en gris
+Ce logo doit être placé juste au-dessus du badge mois/année dans le <td class="h-badge">, aligné à droite avec lui.
 
 2. BANDE 2px dégradé #BEAF88 vers #d4c9a8 vers #BEAF88
 
-3. ENCART MOT DE JESSICA : fond #f9f9f8, bordure fine, flex avec avatar cercle 40px fond noir bordure dorée initiales JB en doré, texte italique gris, signature + titre
+3. ENCART MOT DE JESSICA : fond #f9f9f8, bordure fine, TABLE 2 colonnes (PAS de flex) avec <td width="56" valign="top"> avatar cercle 40px fond noir bordure dorée initiales JB en doré, et <td valign="top"> texte italique gris, signature + titre
 
-4. STATS : grille 3 colonnes fond noir, chiffres dorés 20px, libellés blancs 10px. Extraire 3 chiffres clés des articles.
+4. STATS : TABLE role="presentation" 3 colonnes fond noir OBLIGATOIRE (pas de CSS grid/flex) :
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#252526;">
+  <tr>
+    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;">chiffre doré 20px + libellé blanc 10px</td>
+    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;">...</td>
+    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;">...</td>
+  </tr>
+</table>
+Extraire 3 chiffres clés des articles.
 
 5. ARTICLES : pour chaque article :
    - Ligne tag : badge arrondi fond #f5f5f3 + ligne horizontale fine qui s'étend
    - Accroche 15px semi-gras avec 1-2 mots clés en #BEAF88
-   - Layout 2 colonnes (texte + highlight box) SAUF dernier article en pleine largeur
+   - Layout 2 colonnes EN TABLE (texte + highlight box), jamais en flex : <table role="presentation" width="100%"><tr><td class="art-text" valign="top" style="padding-right:12px;">accroche + texte</td><td class="art-box" valign="top" width="90">highlight box</td></tr></table>. SAUF dernier article : une seule <td colspan="2"> pleine largeur, sans highlight box
    - Article réglementation : blockquote avec bordure gauche 2px dorée, texte italique
    - Highlight box : fond #f9f9f8, chiffre 18px, libellé 10px gris, min-width 80px
    - Texte 13px #555, 80-100 mots, line-height 1.75
@@ -658,7 +675,7 @@ Ce logo doit être placé juste à gauche du badge mois/année dans le header, a
 
 6. BLOC PARRAINAGE : fond #252526 (Obsessed Grey), border-radius 12px, titre blanc, texte gris, bouton fond #BEAF88 texte #252526 'Nous contacter' avec href='https://www.century21-ac-pont-ste-maxence.com' target='_blank'
 
-7. FOOTER flex space-between : point doré + Century 21 Agence Collin à gauche, adresse exacte '79 avenue Jean Jaurès, 60700 Pont-Sainte-Maxence' + lien 'Se désinscrire' à droite en 11px gris
+7. FOOTER : TABLE 2 colonnes (PAS de flex, jamais de space-between CSS) : <td class="footer-left">point doré + Century 21 Agence Collin</td><td class="footer-right" align="right">adresse exacte '79 avenue Jean Jaurès, 60700 Pont-Sainte-Maxence' + lien 'Se désinscrire'</td>, texte 11px gris
 
 COULEURS OFFICIELLES CENTURY 21 (à respecter STRICTEMENT, AUCUNE variation ni nuance autorisée) :
 - #252526 EXACT (Obsessed Grey) pour tous les fonds noirs/foncés
@@ -666,17 +683,23 @@ COULEURS OFFICIELLES CENTURY 21 (à respecter STRICTEMENT, AUCUNE variation ni n
 - #fff blanc, #1a1a1a texte, #555 secondaire, #e5e5e5 bordures, #f5f5f3 fond
 FONT : -apple-system BlinkMacSystemFont sans-serif. MAX-WIDTH 640px centré.
 
-RÈGLES RESPONSIVE OBLIGATOIRES (compatibilité email tous clients et mobiles) :
-- Le conteneur principal doit avoir width:100% ET max-width:640px, centré avec margin:0 auto
-- Tous les paddings horizontaux en valeur relative (ex: padding:16px) jamais en % pour éviter les débordements
-- Le header : utiliser display:block (PAS flexbox) pour la compatibilité Outlook. Organiser le logo, brand et badge en blocs séparés avec text-align approprié
-- Le badge mois/année : width fixe de 70px minimum, word-wrap:break-word, ne PAS utiliser display:flex sur mobile
-- Les grilles de stats : utiliser display:block avec float ou inline-block plutôt que CSS grid/flex pour Outlook
-- Le SVG de l'offre : width:100% height:auto, overflow:hidden, ne JAMAIS utiliser de position:absolute à l'intérieur
+RÈGLES RESPONSIVE OBLIGATOIRES (compatibilité email tous clients, Outlook Windows et mobiles) :
+- INTERDICTION ABSOLUE d'utiliser display:flex ou display:grid n'importe où dans tout le document : Outlook desktop (Windows) ne les supporte pas du tout, ce qui casse la mise en page (header trop large, texte coupé). Utilise EXCLUSIVEMENT des <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"> pour tout layout à plusieurs colonnes (header, stats, articles 2 colonnes, footer), comme spécifié dans chaque section ci-dessus
+- Le conteneur principal doit être une <table role="presentation" width="100%"> avec un <td>/<div> interne style="max-width:640px;margin:0 auto;"
+- Tous les paddings horizontaux en valeur fixe px (ex: padding:16px) jamais en % pour éviter les débordements
+- Ajoute les classes CSS h-brand, h-badge, stat, art-text, art-box, footer-left, footer-right sur les <td> concernés (déjà indiqué dans chaque section) pour permettre le empilement mobile ci-dessous
+- Le badge mois/année : width fixe de 70-90px, word-wrap:break-word
+- Le SVG de l'offre : voir contraintes techniques dédiées dans la section OFFRE. Ne JAMAIS utiliser de position:absolute nulle part dans le document
 - Ajouter dans le <head> : <meta name="viewport" content="width=device-width, initial-scale=1.0"> et <meta http-equiv="X-UA-Compatible" content="IE=edge">
-- Ajouter cette media query dans le style : @media only screen and (max-width:480px) { .wrap { width:100% !important; } .stat { display:block !important; width:100% !important; margin-bottom:8px; } }
+- Ajouter EXACTEMENT cette media query dans le style pour empiler les colonnes sur mobile :
+@media only screen and (max-width:480px) {
+  .wrap { width:100% !important; }
+  td.stat, td.art-text, td.art-box, td.h-brand, td.h-badge, td.footer-left, td.footer-right { display:block !important; width:100% !important; text-align:left !important; box-sizing:border-box; }
+  td.h-badge { text-align:left !important; margin-top:8px; }
+  td.art-box, td.footer-right { margin-top:8px; text-align:left !important; }
+}
 - Toutes les tailles de police en px fixes (pas em/rem) pour compatibilité email
-- Les images et SVG : toujours width="100%" style="display:block;max-width:100%"
+- Les images et SVG : toujours attributs HTML width/height fixes EN PLUS de style="display:block;max-width:100%;height:auto"
 
 ${offreInstruction}
 
@@ -695,9 +718,9 @@ Retourne UNIQUEMENT le code HTML complet, sans commentaires ni backticks.`;
     const raw = data.content?.[0]?.text || '';
     const clean = raw.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim();
     window._currentHtml = clean;
+    goToStep(3);
     const blob1 = new Blob([clean], {type:'text/html'});
     document.getElementById('preview-iframe').src = URL.createObjectURL(blob1);
-    goToStep(3);
     showToast('Newsletter générée ✓');
   } catch(e) {
     clearInterval(iv);
@@ -815,9 +838,9 @@ window.reloadNewsletter = function(id) {
   const n = window._newsletters.find(x => x.id === id);
   if (!n || !n.htmlContent) { showToast('Contenu non disponible'); return; }
   window._currentHtml = n.htmlContent;
+  goToStep(3);
   const blob3 = new Blob([n.htmlContent], {type:'text/html'});
   document.getElementById('preview-iframe').src = URL.createObjectURL(blob3);
-  goToStep(3);
 }
 
 // INIT

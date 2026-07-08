@@ -20,8 +20,8 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           sender: {
-            name: 'J&L Associés – Newsletter Bailleurs',
-            email: 'anto60@live.fr'
+            name: process.env.BREVO_SENDER_NAME || 'J&L Associés – Newsletter Bailleurs',
+            email: process.env.BREVO_SENDER_EMAIL || 'anto60@live.fr'
           },
           to: [{ email }],
           subject: subject || `Votre rendez-vous bailleur – ${new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}`,
