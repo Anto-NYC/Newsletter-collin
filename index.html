@@ -695,7 +695,8 @@ Retourne UNIQUEMENT le code HTML complet, sans commentaires ni backticks.`;
     const raw = data.content?.[0]?.text || '';
     const clean = raw.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim();
     window._currentHtml = clean;
-    document.getElementById('preview-iframe').srcdoc = clean;
+    const blob1 = new Blob([clean], {type:'text/html'});
+    document.getElementById('preview-iframe').src = URL.createObjectURL(blob1);
     goToStep(3);
     showToast('Newsletter générée ✓');
   } catch(e) {
@@ -814,7 +815,8 @@ window.reloadNewsletter = function(id) {
   const n = window._newsletters.find(x => x.id === id);
   if (!n || !n.htmlContent) { showToast('Contenu non disponible'); return; }
   window._currentHtml = n.htmlContent;
-  document.getElementById('preview-iframe').srcdoc = n.htmlContent;
+  const blob3 = new Blob([n.htmlContent], {type:'text/html'});
+  document.getElementById('preview-iframe').src = URL.createObjectURL(blob3);
   goToStep(3);
 }
 
