@@ -722,13 +722,8 @@ RÈGLES RESPONSIVE OBLIGATOIRES (compatibilité email tous clients, Outlook Wind
 - Les images et SVG : toujours attributs HTML width/height fixes EN PLUS de style="display:block;max-width:100%;height:auto"
 
 RÈGLES ANTI MODE SOMBRE (OBLIGATOIRE — sans ça, Apple Mail/Outlook Mobile réinversent automatiquement les couleurs sur les téléphones en mode sombre système, cassant tout le design) :
-- Ajouter dans le <head>, juste après les meta viewport : <meta name="color-scheme" content="light only"> et <meta name="supported-color-schemes" content="light only">
-- Ajouter dans le <style>, à la toute fin, ce bloc EXACT pour forcer les couleurs même si le client mail ignore les meta ci-dessus :
-@media (prefers-color-scheme: dark) {
-  body, .wrap, td, table { background-color: inherit !important; color: inherit !important; }
-}
-[data-ogsc] body, [data-ogsc] .wrap { background-color: inherit !important; }
-- Ne JAMAIS utiliser de couleur de fond ou de texte héritée du système (pas de "background:transparent" sur le body ni sur .wrap) : chaque section doit déclarer explicitement sa propre couleur de fond en style inline ET en CSS, pour qu'aucun client mail ne puisse la remplacer automatiquement
+- Ajouter dans le <head>, juste après les meta viewport, EXACTEMENT ces deux balises et rien d'autre concernant le mode sombre : <meta name="color-scheme" content="light only"> et <meta name="supported-color-schemes" content="light only">
+- N'ajoute AUCUNE media query "prefers-color-scheme" ni aucune règle CSS liée au mode sombre dans le <style> : les deux balises meta ci-dessus suffisent et sont gérées nativement par les clients mail. Ne jamais utiliser "background-color: inherit" ou "color: inherit" nulle part dans le document, sous aucun prétexte : chaque section garde sa couleur de fond explicite (#252526 pour le header/footer/stats/parrainage, #fff ou #f9f9f8 pour le contenu) déclarée uniquement en style inline direct, jamais via inherit
 
 RÈGLES ANTI TRONCATURE DE TEXTE (le texte généré varie en longueur à chaque fois, jamais de troncature) :
 - Aucun titre, sous-titre, badge ou pastille ne doit avoir de width fixe étroite ni de white-space:nowrap ni d'overflow:hidden : toujours white-space:normal, word-wrap:break-word, et une largeur qui s'adapte au contenu (width:auto ou max-width généreux avec padding)
