@@ -85,7 +85,7 @@ export default async function handler(req, res) {
         success: true,
         mode: 'production',
         campaignId: data.id,
-        recipients: 204
+        recipients: 221
       });
     }
 
