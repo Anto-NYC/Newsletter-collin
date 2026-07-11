@@ -61,7 +61,7 @@ export default async function handler(req, res) {
           sender: { name: senderName, email: senderEmail },
           type: 'classic',
           htmlContent,
-          recipients: { listIds: [2] },
+          recipients: { listIds: [3] },
           scheduledAt: new Date(Date.now() + 60000).toISOString() // Dans 1 minute
         })
       });
