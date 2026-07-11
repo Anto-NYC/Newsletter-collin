@@ -649,17 +649,17 @@ ${articlesText}
 
 STRUCTURE EXACTE À RESPECTER :
 
-1. HEADER — STRUCTURE EN TABLE HTML OBLIGATOIRE (jamais de flexbox ni de grid : Outlook desktop ne les supporte pas et ça casse la mise en page sur Windows) :
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#252526;">
+1. HEADER — FOND CLAIR (#f9f7f2 ou équivalent crème très pâle, PAS #252526 ici), STRUCTURE EN TABLE HTML OBLIGATOIRE (jamais de flexbox ni de grid : Outlook desktop ne les supporte pas et ça casse la mise en page sur Windows) :
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#f9f7f2;">
   <tr>
-    <td class="h-brand" style="padding:20px 12px 0 20px;vertical-align:top;">CENTURY 21 en 10px espacé #BEAF88, Agence Collin en 18px blanc, trait #BEAF88 28px, Pont-Sainte-Maxence Oise en gris</td>
-    <td class="h-badge" align="right" valign="top" width="90" style="padding:20px 20px 0 0;white-space:nowrap;">le logo SVG ci-dessous PUIS le badge mois/année arrondi (mois doré, année gris)</td>
+    <td class="h-brand" style="padding:20px 12px 0 20px;vertical-align:top;">CENTURY 21 en 10px espacé gris doré #9a8a5a, Agence Collin en 18px #1a1a1a gras, trait #BEAF88 28px, Pont-Sainte-Maxence Oise en gris #888</td>
+    <td class="h-badge" align="right" valign="top" width="90" style="padding:20px 20px 0 0;white-space:nowrap;">le logo SVG ci-dessous PUIS le badge mois/année arrondi fond #f0ede4 (mois doré #BEAF88, année gris)</td>
   </tr>
   <tr>
-    <td colspan="2" style="padding:8px 20px 20px 20px;">titre Votre rendez-vous bailleur du mois en 24px blanc, sous-titre Marché Réglementation Conseils en gris</td>
+    <td colspan="2" style="padding:8px 20px 20px 20px;">titre Votre rendez-vous bailleur du mois en 24px #1a1a1a gras, sous-titre Marché Réglementation Conseils en gris #888</td>
   </tr>
 </table>
-Décoration cercle doré en arrière-plan du header (positionné en CSS background, jamais en position:absolute qui casse Outlook).
+Décoration cercle doré très subtil (opacité faible) en arrière-plan du header (positionné en CSS background, jamais en position:absolute qui casse Outlook).
 Logo Century 21 (le "C" emblème officiel), reproduit en SVG inline EXACTEMENT comme suit, sans aucune modification du path (copier-coller tel quel) :
 <svg viewBox="0 0 999.99999 1273.6516" width="36" height="46" xmlns="http://www.w3.org/2000/svg">
 <g transform="matrix(1.8902581,0,0,1.8902581,-3.3545016e-6,310.64015)">
@@ -672,14 +672,14 @@ Ce logo doit être placé juste au-dessus du badge mois/année dans le <td class
 
 2. BANDE 2px dégradé #BEAF88 vers #d4c9a8 vers #BEAF88
 
-3. ENCART MOT DE JESSICA : fond #f9f9f8, bordure fine, TABLE 2 colonnes (PAS de flex) avec <td width="56" valign="top"> avatar cercle 40px fond noir bordure dorée initiales JB en doré, et <td valign="top"> texte italique gris, signature + titre
+3. ENCART MOT DE JESSICA : FOND SOMBRE #252526 (Obsessed Grey), TABLE 2 colonnes (PAS de flex) avec <td width="56" valign="top"> avatar cercle 40px fond transparent bordure dorée #BEAF88, initiales JB en blanc, et <td valign="top"> texte italique gris clair #ccc, signature Jessica Beauvillain en blanc gras, titre "Directrice du pôle gestion locative" en gris #999
 
-4. STATS : TABLE role="presentation" 3 colonnes fond noir OBLIGATOIRE (pas de CSS grid/flex) :
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#252526;">
+4. STATS : TABLE role="presentation" 3 colonnes FOND CLAIR (blanc ou #fff, PAS de fond noir ici) OBLIGATOIRE (pas de CSS grid/flex), avec fines bordures verticales #e5e5e5 entre les colonnes pour les séparer visuellement :
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff;">
   <tr>
-    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;">chiffre doré 20px + libellé blanc 10px</td>
-    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;">...</td>
-    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;">...</td>
+    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;border-right:1px solid #e5e5e5;">chiffre doré #BEAF88 20px + libellé gris #888 10px</td>
+    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;border-right:1px solid #e5e5e5;">...</td>
+    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;">... (dernière colonne sans bordure droite)</td>
   </tr>
 </table>
 Extraire 3 chiffres clés des articles.
@@ -698,7 +698,10 @@ Extraire 3 chiffres clés des articles.
 7. FOOTER : TABLE 2 colonnes (PAS de flex, jamais de space-between CSS) : <td class="footer-left">point doré + Century 21 Agence Collin</td><td class="footer-right" align="right">adresse exacte '79 avenue Jean Jaurès, 60700 Pont-Sainte-Maxence' + lien 'Se désinscrire'</td>, texte 11px gris
 
 COULEURS OFFICIELLES CENTURY 21 (à respecter STRICTEMENT, AUCUNE variation ni nuance autorisée) :
-- #252526 EXACT (Obsessed Grey) pour tous les fonds noirs/foncés
+- RÉPARTITION OBLIGATOIRE clair/sombre entre les blocs, pour une alternance visuelle (ne jamais mettre deux blocs sombres consécutifs ni deux blocs clairs consécutifs) :
+  CLAIR (#f9f7f2 ou #fff) : Header, Stats
+  SOMBRE (#252526 exact) : Encart Mot de Jessica, Bloc Parrainage, bandeau SVG en haut du Bloc Offre, Footer
+- #252526 EXACT (Obsessed Grey) pour tous les fonds sombres listés ci-dessus, jamais ailleurs
 - #BEAF88 EXACT (Relentless Gold) pour TOUTE zone dorée : bouton "Nous contacter", bandeau "Offre du mois", accents de texte, bande de séparation, badge logo C21. Utilise précisément ce code hexadécimal partout, sans l'éclaircir, l'assombrir ou changer son opacité d'un élément à l'autre.
 - #fff blanc, #1a1a1a texte, #555 secondaire, #e5e5e5 bordures, #f5f5f3 fond
 FONT : -apple-system BlinkMacSystemFont sans-serif. MAX-WIDTH 640px centré.
