@@ -603,138 +603,250 @@ function refreshStep2() {
     : `<p style="font-size:13px;color:#aaa">Aucun article sélectionné. Retournez à l'étape 1.</p>`;
 }
 
-// ——— GÉNÉRATION ———
-window.generateNewsletter = async () => {
-  const selected = window._articles.filter(x => x.selected);
-  if (!selected.length) { showToast('Sélectionnez au moins 1 article'); return; }
-  const motJessica = document.getElementById('mot-jessica').value.trim();
-  const offreTitre = document.getElementById('offre-titre').value.trim();
-  const offreDescription = document.getElementById('offre-description').value.trim();
-  const offreValidite = document.getElementById('offre-validite').value.trim();
-  document.getElementById('btn-generate').disabled = true;
-  document.getElementById('generating-state').style.display = 'block';
-  const msgs = ['Claude rédige votre newsletter…', 'Mise en forme des rubriques…', 'Dernière relecture…'];
-  let mi = 0;
-  const iv = setInterval(() => { mi=(mi+1)%msgs.length; document.getElementById('generating-msg').textContent = msgs[mi]; }, 3000);
+// ——— GABARIT FIXE (HTML/CSS figés une fois pour toutes, seul le contenu texte est généré par l'IA) ———
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function highlightKeywords(text, keywords) {
+  let html = escapeHtml(text);
+  (keywords || []).forEach(kw => {
+    if (!kw) return;
+    const esc = escapeHtml(kw).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    html = html.replace(new RegExp('(' + esc + ')', 'i'), '<strong style="color:#BEAF88">$1</strong>');
+  });
+  return html;
+}
 
-  const articlesText = selected.map((a,i) => `Article ${i+1} — Rubrique: ${a.tag}\nTitre: ${a.title}\nRésumé: ${a.summary}${a.source?'\nSource: '+a.source:''}`).join('\n\n');
-  const offreInstruction = offreTitre && offreDescription
-    ? `\n\nOFFRE PROMOTIONNELLE DU MOIS - BLOC OBLIGATOIRE À INTÉGRER APRÈS LE BLOC PARRAINAGE :
-Titre : ${offreTitre}
-Description : ${offreDescription}
-${offreValidite ? 'Validité : ' + offreValidite : ''}
-
-Crée un bloc offre avec :
-1. Un visuel SVG illustratif en haut du bloc (largeur 100%, hauteur 120px) : FOND CLAIR #fff ou #f9f7f2 (PAS #252526 ici), avec une forme géométrique décorative discrète en gris clair/doré très pâle en contours fins (cercles, losanges ou lignes), le titre de l'offre en #BEAF88 (Relentless Gold) centré en grand avec un petit trait doré horizontal sous le titre, et un sous-titre court accrocheur en gris #888 majuscules espacées, lié au contenu de l'offre. Style premium et sobre, tout en légèreté.
-   CONTRAINTES TECHNIQUES OBLIGATOIRES pour ce SVG (anti-débordement mobile/Windows) : viewBox="0 0 600 120" EXACTEMENT, attributs HTML width="100%" height="120" (en plus du style), preserveAspectRatio="xMidYMid meet", et l'envelopper dans <div style="width:100%;overflow:hidden;line-height:0;">...</div>. Aucun texte ni élément ne doit dépasser les bornes du viewBox.
-2. Sous le SVG : fond #BEAF88 (Relentless Gold), padding 1.5rem, badge "OFFRE DU MOIS" en #252526 sur fond #252526/20%, titre en #252526 16px gras, description en #252526/80% 13px, validité en petit italique #252526/60%.
-Style global : border-radius 12px, overflow hidden, ombre légère.`
-    : '';
-
-  const motInstruction = motJessica ? `MOT DE JESSICA - REPRODUCTION EXACTE OBLIGATOIRE : Utilise exactement ce texte mot pour mot, sans aucune modification, reformulation ou interprétation : "${motJessica}"` : `Génère un mot de Jessica Beauvillain chaleureux et professionnel, en lien avec les sujets du mois.`;
-  const mois = currentMonth();
-
-  const prompt = `Tu es rédacteur d'une newsletter mensuelle pour les bailleurs de Century 21 Agence Collin, Pont-Sainte-Maxence (Oise 60).
-
-Génère une newsletter HTML complète autonome (avec DOCTYPE, head, body, styles dans un tag style) en français, ton chaleureux et professionnel.
-
-ÉDITION : ${mois}
-AGENCE : Century 21 – Agence Collin
-SIGNATAIRE : Jessica Beauvillain, Directrice du pôle gestion locative
-
-${motInstruction}
-
-ARTICLES À TRAITER :
-${articlesText}
-
-STRUCTURE EXACTE À RESPECTER :
-
-1. HEADER — FOND CLAIR (#f9f7f2 ou équivalent crème très pâle, PAS #252526 ici), STRUCTURE EN TABLE HTML OBLIGATOIRE (jamais de flexbox ni de grid : Outlook desktop ne les supporte pas et ça casse la mise en page sur Windows) :
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#f9f7f2;">
-  <tr>
-    <td class="h-brand" style="padding:20px 12px 0 20px;vertical-align:top;">CENTURY 21 en 10px espacé gris doré #9a8a5a, Agence Collin en 18px #1a1a1a gras, trait #BEAF88 28px, Pont-Sainte-Maxence Oise en gris #888</td>
-    <td class="h-badge" align="right" valign="top" width="90" style="padding:20px 20px 0 0;white-space:nowrap;">le logo SVG ci-dessous PUIS le badge mois/année arrondi fond #f0ede4 (mois doré #BEAF88, année gris)</td>
-  </tr>
-  <tr>
-    <td colspan="2" style="padding:8px 20px 20px 20px;">titre Votre rendez-vous bailleur du mois en 24px #1a1a1a gras, sous-titre Marché Réglementation Conseils en gris #888</td>
-  </tr>
-</table>
-Décoration cercle doré très subtil (opacité faible) en arrière-plan du header (positionné en CSS background, jamais en position:absolute qui casse Outlook).
-Logo Century 21 (le "C" emblème officiel), reproduit en SVG inline EXACTEMENT comme suit, sans aucune modification du path (copier-coller tel quel) :
-<svg viewBox="0 0 999.99999 1273.6516" width="36" height="46" xmlns="http://www.w3.org/2000/svg">
+const C21_LOGO_SVG = `<svg viewBox="0 0 999.99999 1273.6516" width="36" height="46" xmlns="http://www.w3.org/2000/svg">
 <g transform="matrix(1.8902581,0,0,1.8902581,-3.3545016e-6,310.64015)">
 <polygon points="331.09,364.76 373.11,364.76 373.11,144.7 324.1,144.7 324.1,144.7 323.63,144.7 294.53,186.72 331.09,186.72" fill="#BEAF88" transform="matrix(1.3225707,0,0,1.3225707,0,-164.33698)"/>
 <path d="M 446.38085,431.78532 C 302.59096,490.77198 138.22187,422.02475 79.235213,278.23486 21.161132,136.52141 86.985477,-25.652218 227.48217,-86.675631 a 280.92725,280.92725 0 0 1 263.19157,23.621113 l 31.7417,-45.655142 a 335.33781,335.33781 0 0 0 -185.517,-55.62732 C 150.83919,-164.33698 0,-13.497793 0,172.56146 0,358.62071 150.83919,509.4599 336.89844,509.4599 a 335.37749,335.37749 0 0 0 192.12985,-60.12406 l -31.67557,-45.64192 a 279.60468,279.60468 0 0 1 -50.97187,28.0914 z" fill="#BEAF88"/>
 <path d="m 286.44418,262.4719 89.5587,0 -37.78258,55.27451 -157.4274,0 116.84612,-168.62224 c 0,0 12.8622,-16.81674 12.8622,-31.75045 0,-21.300834 -17.91643,-34.696367 -36.365,-34.696367 -23.91627,0 -36.66945,19.671847 -36.66945,34.961337 l 0,4.89774 -55.27451,0 0,-4.60429 c 0,-41.782111 33.94437,-90.620891 92.46793,-90.620891 50.75523,0 91.17871,40.901528 91.17871,92.765471 0,31.67285 -19.22247,55.63519 -19.22247,55.63519 z" fill="#BEAF88"/>
 </g>
-</svg>
-Ce logo doit être placé juste au-dessus du badge mois/année dans le <td class="h-badge">, aligné à droite avec lui.
+</svg>`;
 
-2. BANDE 2px dégradé #BEAF88 vers #d4c9a8 vers #BEAF88
+function renderStatCell(stat, isLast) {
+  return `<td class="stat" align="center" width="33.33%" style="padding:16px 8px;${isLast?'':'border-right:1px solid #e5e5e5;'}">
+    <div style="font-size:20px;font-weight:700;color:#BEAF88;">${escapeHtml(stat.value)}</div>
+    <div style="font-size:10px;color:#888;margin-top:4px;letter-spacing:0.03em;">${escapeHtml(stat.label || '').toUpperCase()}</div>
+  </td>`;
+}
 
-3. ENCART MOT DE JESSICA : FOND SOMBRE #252526 (Obsessed Grey), TABLE 2 colonnes (PAS de flex) avec <td width="56" valign="top"> avatar cercle 40px fond transparent bordure dorée #BEAF88, initiales JB en blanc, et <td valign="top"> texte italique gris clair #ccc, signature Jessica Beauvillain en blanc gras, titre "Directrice du pôle gestion locative" en gris #999
+function renderArticle(a, isLast) {
+  const accrocheHtml = highlightKeywords(a.accroche, a.motsClefs);
+  const bodyHtml = escapeHtml(a.texte).replace(/\n/g, '<br>');
+  const tagRow = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;"><tr>
+    <td style="white-space:nowrap;"><span style="display:inline-block;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;background:#f5f5f3;color:#666;padding:3px 10px;border-radius:12px;">${escapeHtml(a.tag)}</span></td>
+    <td style="padding-left:10px;"><div style="border-top:1px solid #e5e5e5;"></div></td>
+  </tr></table>`;
 
-4. STATS : TABLE role="presentation" 3 colonnes FOND CLAIR (blanc ou #fff, PAS de fond noir ici) OBLIGATOIRE (pas de CSS grid/flex), avec fines bordures verticales #e5e5e5 entre les colonnes pour les séparer visuellement :
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff;">
-  <tr>
-    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;border-right:1px solid #e5e5e5;">chiffre doré #BEAF88 20px + libellé gris #888 10px</td>
-    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;border-right:1px solid #e5e5e5;">...</td>
-    <td class="stat" align="center" width="33.33%" style="padding:16px 8px;">... (dernière colonne sans bordure droite)</td>
-  </tr>
-</table>
-Extraire 3 chiffres clés des articles.
+  const textBlock = a.isReglementation
+    ? `<blockquote style="margin:0;padding:0 0 0 14px;border-left:2px solid #BEAF88;font-style:italic;color:#555;font-size:13px;line-height:1.75;">
+        <div style="font-size:15px;font-weight:600;margin-bottom:8px;color:#1a1a1a;font-style:normal;">${accrocheHtml}</div>
+        ${bodyHtml}
+      </blockquote>`
+    : `<div style="font-size:15px;font-weight:600;margin-bottom:8px;color:#1a1a1a;">${accrocheHtml}</div>
+       <div style="font-size:13px;color:#555;line-height:1.75;">${bodyHtml}</div>`;
 
-5. ARTICLES : pour chaque article :
-   - Ligne tag : badge arrondi fond #f5f5f3 + ligne horizontale fine qui s'étend
-   - Accroche 15px semi-gras avec 1-2 mots clés en #BEAF88
-   - Layout 2 colonnes EN TABLE (texte + highlight box), jamais en flex : <table role="presentation" width="100%"><tr><td class="art-text" valign="top" style="padding-right:12px;">accroche + texte</td><td class="art-box" valign="top" width="90">highlight box</td></tr></table>. SAUF dernier article : une seule <td colspan="2"> pleine largeur, sans highlight box
-   - Article réglementation : blockquote avec bordure gauche 2px dorée, texte italique
-   - Highlight box : fond #f9f9f8, chiffre 18px, libellé 10px gris, min-width 80px
-   - Texte 13px #555, 80-100 mots, line-height 1.75
-   - Séparateurs ligne fine #e5e5e5 entre articles
+  const highlightBox = (!isLast && a.highlightValue) ? `
+    <td class="art-box" valign="top" width="90" style="padding-left:12px;">
+      <div style="background:#f9f9f8;border-radius:8px;padding:10px 8px;text-align:center;min-width:80px;">
+        <div style="font-size:18px;font-weight:700;color:#1a1a1a;">${escapeHtml(a.highlightValue)}</div>
+        <div style="font-size:10px;color:#888;margin-top:2px;">${escapeHtml(a.highlightLabel || '')}</div>
+      </div>
+    </td>` : '';
 
-6. BLOC PARRAINAGE : fond #252526 (Obsessed Grey), border-radius 12px, titre blanc, texte gris, bouton fond #BEAF88 texte #252526 'Nous contacter' avec href='https://www.century21-ac-pont-ste-maxence.com' target='_blank'
+  return `${tagRow}
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="art-text" valign="top" style="${isLast?'':'padding-right:12px;'}">${textBlock}</td>
+      ${highlightBox}
+    </tr>
+  </table>`;
+}
 
-7. FOOTER : TABLE 2 colonnes (PAS de flex, jamais de space-between CSS) : <td class="footer-left">point doré + Century 21 Agence Collin</td><td class="footer-right" align="right">adresse exacte '79 avenue Jean Jaurès, 60700 Pont-Sainte-Maxence' + lien 'Se désinscrire'</td>, texte 11px gris
+function renderOfferBlock(offre) {
+  if (!offre) return '';
+  return `
+  <div style="height:16px;line-height:16px;font-size:0;">&nbsp;</div>
+  <div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+    <div style="width:100%;overflow:hidden;line-height:0;background:#f9f7f2;">
+      <svg viewBox="0 0 600 120" width="100%" height="120" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block;max-width:100%;">
+        <circle cx="60" cy="60" r="42" fill="none" stroke="#e5ddc8" stroke-width="1.5"/>
+        <circle cx="60" cy="60" r="28" fill="none" stroke="#e5ddc8" stroke-width="1"/>
+        <circle cx="530" cy="55" r="36" fill="none" stroke="#e5ddc8" stroke-width="1.5"/>
+        <rect x="500" y="80" width="16" height="16" fill="#e5ddc8" transform="rotate(45 508 88)"/>
+        <rect x="292" y="26" width="8" height="8" fill="#BEAF88" transform="rotate(45 296 30)"/>
+        <text x="300" y="62" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26" font-weight="700" fill="#BEAF88">${escapeHtml(offre.titre)}</text>
+        <line x1="255" y1="74" x2="345" y2="74" stroke="#BEAF88" stroke-width="1"/>
+        <text x="300" y="94" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11" letter-spacing="1.5" fill="#888">${escapeHtml((offre.sousTitre || '').toUpperCase())}</text>
+      </svg>
+    </div>
+    <div style="background:#BEAF88;padding:1.5rem;">
+      <span style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#252526;background:rgba(37,37,38,0.2);padding:3px 10px;border-radius:10px;margin-bottom:10px;">Offre du mois</span>
+      <div style="font-size:16px;font-weight:700;color:#252526;margin-top:10px;">${escapeHtml(offre.titre)}</div>
+      <div style="font-size:13px;color:rgba(37,37,38,0.8);margin-top:6px;line-height:1.6;">${escapeHtml(offre.description)}</div>
+      ${offre.validite ? `<div style="font-size:11px;font-style:italic;color:rgba(37,37,38,0.6);margin-top:10px;">${escapeHtml(offre.validite)}</div>` : ''}
+    </div>
+  </div>`;
+}
 
-COULEURS OFFICIELLES CENTURY 21 (à respecter STRICTEMENT, AUCUNE variation ni nuance autorisée) :
-- RÉPARTITION OBLIGATOIRE clair/sombre entre les blocs, pour une alternance visuelle (ne jamais mettre deux blocs sombres consécutifs ni deux blocs clairs consécutifs) :
-  CLAIR (#f9f7f2 ou #fff) : Header, Stats
-  SOMBRE (#252526 exact) : Encart Mot de Jessica, Bloc Parrainage, bandeau SVG en haut du Bloc Offre, Footer
-- #252526 EXACT (Obsessed Grey) pour tous les fonds sombres listés ci-dessus, jamais ailleurs
-- #BEAF88 EXACT (Relentless Gold) pour TOUTE zone dorée : bouton "Nous contacter", bandeau "Offre du mois", accents de texte, bande de séparation, badge logo C21. Utilise précisément ce code hexadécimal partout, sans l'éclaircir, l'assombrir ou changer son opacité d'un élément à l'autre.
-- #fff blanc, #1a1a1a texte, #555 secondaire, #e5e5e5 bordures, #f5f5f3 fond
-FONT : -apple-system BlinkMacSystemFont sans-serif. MAX-WIDTH 640px centré.
+function buildNewsletterHtml(d) {
+  const statsHtml = (d.stats || []).map((s,i) => renderStatCell(s, i === d.stats.length - 1)).join('');
+  const articlesHtml = d.articles.map((a,i) => `
+    <div style="padding:20px 0;${i>0?'border-top:1px solid #e5e5e5;':''}">
+      ${renderArticle(a, i === d.articles.length - 1)}
+    </div>`).join('');
 
-RÈGLES RESPONSIVE OBLIGATOIRES (compatibilité email tous clients, Outlook Windows et mobiles) :
-- INTERDICTION ABSOLUE d'utiliser display:flex ou display:grid n'importe où dans tout le document : Outlook desktop (Windows) ne les supporte pas du tout, ce qui casse la mise en page (header trop large, texte coupé). Utilise EXCLUSIVEMENT des <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"> pour tout layout à plusieurs colonnes (header, stats, articles 2 colonnes, footer), comme spécifié dans chaque section ci-dessus
-- Le conteneur principal doit être une <table role="presentation" width="100%"> avec un <td>/<div> interne style="max-width:640px;margin:0 auto;"
-- Tous les paddings horizontaux en valeur fixe px (ex: padding:16px) jamais en % pour éviter les débordements
-- Ajoute les classes CSS h-brand, h-badge, stat, art-text, art-box, footer-left, footer-right sur les <td> concernés (déjà indiqué dans chaque section) pour permettre le empilement mobile ci-dessous
-- Le badge mois/année : width fixe de 70-90px, word-wrap:break-word
-- Le SVG de l'offre : voir contraintes techniques dédiées dans la section OFFRE. Ne JAMAIS utiliser de position:absolute nulle part dans le document
-- Ajouter dans le <head> : <meta name="viewport" content="width=device-width, initial-scale=1.0"> et <meta http-equiv="X-UA-Compatible" content="IE=edge">
-- Ajouter EXACTEMENT cette media query dans le style pour empiler les colonnes sur mobile :
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light only">
+<title>Votre rendez-vous bailleur — ${escapeHtml(d.mois)} ${escapeHtml(d.annee)}</title>
+<style>
+* { box-sizing: border-box; }
+body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; background:#f5f5f3; }
 @media only screen and (max-width:480px) {
   .wrap { width:100% !important; }
   td.stat, td.art-text, td.art-box, td.h-brand, td.h-badge, td.footer-left, td.footer-right { display:block !important; width:100% !important; text-align:left !important; box-sizing:border-box; }
   td.h-badge { text-align:left !important; margin-top:8px; }
   td.art-box, td.footer-right { margin-top:8px; text-align:left !important; }
 }
-- Toutes les tailles de police en px fixes (pas em/rem) pour compatibilité email
-- Les images et SVG : toujours attributs HTML width/height fixes EN PLUS de style="display:block;max-width:100%;height:auto"
+</style>
+</head>
+<body>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f5f3;">
+<tr><td align="center" style="padding:20px 0;">
+<div class="wrap" style="width:100%;max-width:640px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;">
 
-RÈGLES ANTI MODE SOMBRE (OBLIGATOIRE — sans ça, Apple Mail/Outlook Mobile réinversent automatiquement les couleurs sur les téléphones en mode sombre système, cassant tout le design) :
-- Ajouter dans le <head>, juste après les meta viewport, EXACTEMENT ces deux balises et rien d'autre concernant le mode sombre : <meta name="color-scheme" content="light only"> et <meta name="supported-color-schemes" content="light only">
-- N'ajoute AUCUNE media query "prefers-color-scheme" ni aucune règle CSS liée au mode sombre dans le <style> : les deux balises meta ci-dessus suffisent et sont gérées nativement par les clients mail. Ne jamais utiliser "background-color: inherit" ou "color: inherit" nulle part dans le document, sous aucun prétexte : chaque section garde sa couleur de fond explicite (#252526 pour le header/footer/stats/parrainage, #fff ou #f9f9f8 pour le contenu) déclarée uniquement en style inline direct, jamais via inherit
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#f9f7f2;">
+    <tr>
+      <td class="h-brand" style="padding:20px 12px 0 20px;vertical-align:top;">
+        <div style="font-size:10px;letter-spacing:0.1em;color:#9a8a5a;font-weight:600;">CENTURY 21</div>
+        <div style="font-size:18px;font-weight:700;color:#1a1a1a;margin-top:2px;">Agence Collin</div>
+        <div style="width:28px;height:2px;background:#BEAF88;margin:8px 0;"></div>
+        <div style="font-size:12px;color:#888;">Pont-Sainte-Maxence · Oise</div>
+      </td>
+      <td class="h-badge" align="right" valign="top" width="90" style="padding:20px 20px 0 0;white-space:nowrap;">
+        ${C21_LOGO_SVG}
+        <div style="display:inline-block;background:#f0ede4;border-radius:8px;padding:6px 10px;margin-top:8px;text-align:center;">
+          <div style="font-size:11px;font-weight:700;color:#BEAF88;">${escapeHtml(d.mois).toUpperCase()}</div>
+          <div style="font-size:11px;color:#999;">${escapeHtml(d.annee)}</div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" style="padding:8px 20px 20px 20px;">
+        <div style="font-size:24px;font-weight:700;color:#1a1a1a;">Votre rendez-vous bailleur du mois</div>
+        <div style="font-size:13px;color:#888;margin-top:4px;">Marché · Réglementation · Conseils</div>
+      </td>
+    </tr>
+  </table>
 
-RÈGLES ANTI TRONCATURE DE TEXTE (le texte généré varie en longueur à chaque fois, jamais de troncature) :
-- Aucun titre, sous-titre, badge ou pastille ne doit avoir de width fixe étroite ni de white-space:nowrap ni d'overflow:hidden : toujours white-space:normal, word-wrap:break-word, et une largeur qui s'adapte au contenu (width:auto ou max-width généreux avec padding)
-- overflow:hidden est autorisé UNIQUEMENT sur le conteneur du SVG de l'offre (anti-débordement), jamais sur un élément contenant du texte
+  <div style="height:2px;background:linear-gradient(90deg,#BEAF88,#d4c9a8,#BEAF88);"></div>
 
-${offreInstruction}
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#252526;">
+    <tr>
+      <td width="76" valign="top" style="padding:20px 0 20px 20px;">
+        <div style="width:40px;height:40px;border-radius:50%;border:1.5px solid #BEAF88;color:#fff;font-size:13px;font-weight:700;text-align:center;line-height:40px;">JB</div>
+      </td>
+      <td valign="top" style="padding:20px 20px 20px 0;">
+        <div style="font-style:italic;color:#ccc;font-size:14px;line-height:1.7;">« ${escapeHtml(d.motJessica)} »</div>
+        <div style="margin-top:10px;font-size:13px;font-weight:700;color:#fff;">Jessica Beauvillain</div>
+        <div style="font-size:11px;color:#999;">Directrice du pôle gestion locative</div>
+      </td>
+    </tr>
+  </table>
 
-Retourne UNIQUEMENT le code HTML complet, sans commentaires ni backticks.`;
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff;">
+    <tr>${statsHtml}</tr>
+  </table>
+
+  <div style="padding:0 20px;">${articlesHtml}</div>
+
+  <div style="padding:0 20px 20px 20px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#252526;border-radius:12px;">
+      <tr><td style="padding:1.75rem;text-align:center;">
+        <div style="font-size:10px;letter-spacing:0.08em;color:#BEAF88;text-transform:uppercase;font-weight:700;margin-bottom:8px;">Parrainage</div>
+        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;">Vous connaissez un propriétaire bailleur ?</div>
+        <div style="font-size:13px;color:#aaa;line-height:1.7;max-width:440px;margin:0 auto 20px auto;">Partagez cette newsletter à vos proches propriétaires et aidez-les à gérer leur patrimoine locatif en toute sérénité. Notre équipe est disponible pour répondre à toutes leurs questions, sans engagement.</div>
+        <a href="https://www.century21-ac-pont-ste-maxence.com" target="_blank" style="display:inline-block;background:#BEAF88;color:#252526;font-size:13px;font-weight:700;text-decoration:none;padding:12px 28px;border-radius:8px;">Nous contacter</a>
+      </td></tr>
+    </table>
+    ${renderOfferBlock(d.offre)}
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#252526;">
+    <tr>
+      <td class="footer-left" style="padding:16px 20px;font-size:11px;color:#999;">
+        <span style="color:#BEAF88;">●</span> Century 21 Agence Collin
+      </td>
+      <td class="footer-right" align="right" style="padding:16px 20px;font-size:11px;color:#999;">
+        79 avenue Jean Jaurès, 60700 Pont-Sainte-Maxence &nbsp;·&nbsp; <a href="#" style="color:#999;">Se désinscrire</a>
+      </td>
+    </tr>
+  </table>
+
+</div>
+</td></tr>
+</table>
+</body>
+</html>`;
+}
+
+// ——— GÉNÉRATION ———
+window.generateNewsletter = async () => {
+  const selected = window._articles.filter(x => x.selected);
+  if (!selected.length) { showToast('Sélectionnez au moins 1 article'); return; }
+  const motJessicaInput = document.getElementById('mot-jessica').value.trim();
+  const offreTitre = document.getElementById('offre-titre').value.trim();
+  const offreDescription = document.getElementById('offre-description').value.trim();
+  const offreValidite = document.getElementById('offre-validite').value.trim();
+  document.getElementById('btn-generate').disabled = true;
+  document.getElementById('generating-state').style.display = 'block';
+  const msgs = ['Claude rédige le contenu…', 'Mise en forme des rubriques…', 'Dernière relecture…'];
+  let mi = 0;
+  const iv = setInterval(() => { mi=(mi+1)%msgs.length; document.getElementById('generating-msg').textContent = msgs[mi]; }, 3000);
+
+  const articlesText = selected.map((a,i) => `Article ${i+1} — Rubrique: ${a.tag}\nTitre: ${a.title}\nRésumé: ${a.summary}${a.source?'\nSource: '+a.source:''}`).join('\n\n');
+  const [moisRaw, annee] = currentMonth().split(' ');
+  const mois = moisRaw.charAt(0).toUpperCase() + moisRaw.slice(1);
+  const hasOffre = !!(offreTitre && offreDescription);
+
+  const prompt = `Tu es rédacteur d'une newsletter mensuelle pour les bailleurs de Century 21 Agence Collin, Pont-Sainte-Maxence (Oise 60). Ton chaleureux et professionnel.
+
+ARTICLES À TRAITER :
+${articlesText}
+
+${motJessicaInput ? '' : `Génère aussi un court mot de Jessica Beauvillain (Directrice du pôle gestion locative), chaleureux et professionnel, en lien avec les sujets du mois (3-4 phrases).`}
+${hasOffre ? `\nUne offre promotionnelle "${offreTitre}" est proposée ce mois-ci : ${offreDescription}. Génère un sous-titre très court et accrocheur (5-8 mots) pour cette offre, en lien avec son contenu.` : ''}
+
+Réponds UNIQUEMENT en JSON valide, sans aucun texte avant/après, sans backticks, selon EXACTEMENT ce format :
+{
+  ${motJessicaInput ? '' : '"motJessica": "...",'}
+  "stats": [
+    {"value": "chiffre clé 1 (ex: 21 400 €)", "label": "libellé court en 4-6 mots"},
+    {"value": "chiffre clé 2", "label": "libellé court"},
+    {"value": "chiffre clé 3", "label": "libellé court"}
+  ],
+  "articles": [
+    {
+      "tag": "1-2 mots de rubrique (ex: Fiscalité, Marché local, Réglementation)",
+      "accroche": "1 phrase accroche de 15-20 mots, sans balises HTML",
+      "motsClefs": ["mot ou expression de l'accroche à mettre en avant", "éventuellement un second"],
+      "texte": "80 à 100 mots de contenu, sans balises HTML",
+      "highlightValue": "un chiffre clé de cet article à mettre en avant (ex: 21 400 €)",
+      "highlightLabel": "libellé très court du chiffre (4-5 mots max)",
+      "isReglementation": true ou false selon si l'article traite de réglementation
+    }
+  ]${hasOffre ? ',\n  "offreSousTitre": "sous-titre court et accrocheur pour l\'offre"' : ''}
+}
+
+Un objet par article fourni, dans le même ordre. Les 3 "stats" doivent être extraites/déduites des articles ci-dessus (un chiffre différent par article si possible).`;
 
   try {
     const res = await fetch('/api/generate', {
@@ -750,10 +862,21 @@ Retourne UNIQUEMENT le code HTML complet, sans commentaires ni backticks.`;
       throw new Error(data.error?.message || data.error || 'Réponse vide de l\'API Claude');
     }
     const raw = data.content[0].text;
-    const clean = raw.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim();
-    window._currentHtml = clean;
+    const clean = raw.replace(/^```json\n?/, '').replace(/^```\n?/, '').replace(/\n?```$/, '').trim();
+    const parsed = JSON.parse(clean);
+    if (!Array.isArray(parsed.articles) || !parsed.articles.length) {
+      throw new Error('Réponse JSON invalide (articles manquants)');
+    }
+    const html = buildNewsletterHtml({
+      mois, annee,
+      motJessica: motJessicaInput || parsed.motJessica || '',
+      stats: parsed.stats || [],
+      articles: parsed.articles,
+      offre: hasOffre ? { titre: offreTitre, description: offreDescription, validite: offreValidite, sousTitre: parsed.offreSousTitre || '' } : null
+    });
+    window._currentHtml = html;
     goToStep(3);
-    const blob1 = new Blob([clean], {type:'text/html'});
+    const blob1 = new Blob([html], {type:'text/html'});
     document.getElementById('preview-iframe').src = URL.createObjectURL(blob1);
     showToast('Newsletter générée ✓');
   } catch(e) {
