@@ -1040,8 +1040,11 @@ window.sendTestNewsletter = async () => {
     btn.disabled = false;
     btn.textContent = 'Envoyer ✉';
     closeModal('modal-send-test');
-    if (data.success) {
-      showToast('✅ Newsletter envoyée aux 3 adresses de test !');
+    if (data.success && data.sent === data.total) {
+      showToast(`✅ Newsletter envoyée aux ${data.sent} adresses de test !`);
+    } else if (data.success) {
+      const echecs = (data.results || []).filter(r => !r.success);
+      showToast(`⚠️ ${data.sent}/${data.total} envoyés. Échec : ${echecs.map(r => r.email + ' (' + r.error + ')').join(', ')}`);
     } else {
       showToast('Erreur : ' + (data.error || 'Erreur inconnue'));
     }
@@ -1126,7 +1129,9 @@ window.sendProdNewsletter = async () => {
     btn.textContent = 'Envoyer à 221 bailleurs →';
     closeModal('modal-send-prod');
     if (data.success) {
-      showToast(`✅ Newsletter envoyée à ${data.recipients} bailleurs !`);
+      showToast(data.warning
+        ? '⚠️ ' + data.warning
+        : '✅ Newsletter envoyée aux bailleurs !');
     } else {
       showToast('Erreur : ' + (data.error || 'Erreur inconnue'));
     }
