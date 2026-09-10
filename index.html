@@ -493,7 +493,7 @@ window.lancerVeille = async () => {
   const ANGLES = [
     "l'impact concret sur la rentabilité nette du bailleur",
     "un changement réglementaire ou fiscal à anticiper dans les 6 à 12 mois",
-    "une comparaison chiffrée entre communes ou quartiers du secteur (Pont-Sainte-Maxence, Creil, Senlis, Compiègne, Chantilly, Nogent-sur-Oise)",
+    "une comparaison chiffrée (entre régions ou grandes villes françaises, ou entre communes du secteur : Pont-Sainte-Maxence, Creil, Senlis, Compiègne, Chantilly)",
     "une erreur fréquente de bailleur et comment l'éviter",
     "un type de bien ou de location spécifique (meublé, colocation, petite surface, maison, immeuble de rapport)",
     "la relation locataire : sélection, impayés, entretien, départ",
@@ -503,13 +503,13 @@ window.lancerVeille = async () => {
   const anglesTires = ANGLES.slice().sort(() => Math.random() - 0.5).slice(0, 4);
 
   const THEMES = [
-    "marché locatif local et tensions par typologie de bien",
+    "marché locatif : tensions, niveaux de loyers et typologies de biens",
     "réglementation (DPE, décence, diagnostics, permis de louer, encadrement des loyers)",
     "fiscalité bailleur (régimes micro-foncier/réel, déficit foncier, LMNP, plus-values, IFI)",
     "aides et dispositifs (MaPrimeRénov', éco-PTZ, Loc'Avantages, Denormandie)",
     "gestion locative au quotidien (bail, état des lieux, charges, révision de loyer, assurance GLI)",
     "impayés, contentieux, procédures et prévention du risque",
-    "investissement et arbitrage patrimonial dans l'Oise",
+    "investissement et arbitrage patrimonial",
     "copropriété (charges, travaux votés, fonds travaux, syndic)",
     "assurance, sinistres et responsabilités du bailleur",
     "transmission, succession, SCI et démembrement",
@@ -518,9 +518,19 @@ window.lancerVeille = async () => {
   ];
   const themesTires = THEMES.slice().sort(() => Math.random() - 0.5).slice(0, 6);
 
+  // Repartition geographique des 4 articles. Ajustable : ex. [2,2,0] pour du 100% national/regional.
+  const REPARTITION = { national: 2, regional: 1, local: 1 };
+
   const prompt = `Tu es un assistant de veille immobilière pour une agence à Pont-Sainte-Maxence (Oise, 60), secteur Hauts-de-France.
 
-Génère 4 articles d'actualité immobilière récents et pertinents pour des propriétaires bailleurs dans ce secteur (${currentMonth()}).
+Génère 4 articles d'actualité immobilière récents et pertinents pour des propriétaires bailleurs (${currentMonth()}).
+
+Les bailleurs de l'agence sont autant concernés par l'actualité NATIONALE (lois de finances, réglementation, fiscalité, jurisprudence, tendances du marché français, taux de crédit) que par leur marché local. Ne restreins donc PAS tous les sujets à l'Oise.
+
+PORTÉE GÉOGRAPHIQUE — répartition obligatoire des 4 articles :
+- ${REPARTITION.national} article${REPARTITION.national > 1 ? 's' : ''} de portée NATIONALE (France entière : réglementation, fiscalité, marché, financement, jurisprudence). Aucune mention de l'Oise n'est nécessaire.
+- ${REPARTITION.regional} article${REPARTITION.regional > 1 ? 's' : ''} de portée RÉGIONALE (Hauts-de-France ou département de l'Oise).
+- ${REPARTITION.local} article${REPARTITION.local > 1 ? 's' : ''} de portée LOCALE (secteur de Pont-Sainte-Maxence et communes voisines).
 
 VARIÉTÉ OBLIGATOIRE — c'est le critère le plus important de cette demande :
 Les 4 articles doivent être NETTEMENT différents les uns des autres, et différents des sujets déjà traités listés plus bas.
@@ -533,7 +543,7 @@ ${anglesTires.map(a => '- ' + a).join('\n')}
 ${dejaVus ? `SUJETS DÉJÀ TRAITÉS — NE PAS LES REPRENDRE, même reformulés ou sous un autre titre. Change franchement de sujet :
 ${dejaVus}
 ` : ''}
-Évite les marronniers génériques (« le DPE évolue », « le déficit foncier permet de déduire ») sauf si tu apportes un angle réellement neuf et une information précise et actionnable. Privilégie le concret : chiffres locaux, seuils, dates d'entrée en vigueur, cas pratiques.
+Évite les marronniers génériques (« le DPE évolue », « le déficit foncier permet de déduire ») sauf si tu apportes un angle réellement neuf et une information précise et actionnable. Privilégie le concret : chiffres précis (nationaux ou locaux selon la portée de l'article), seuils, dates d'entrée en vigueur, cas pratiques.
 
 Réponds UNIQUEMENT en JSON valide, sans aucun texte avant ou après, sous ce format exact :
 [
