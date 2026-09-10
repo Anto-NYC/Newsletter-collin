@@ -8,7 +8,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Contenu manquant' });
   }
 
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || 'anto60@live.fr';
+  if (!process.env.BREVO_API_KEY) {
+    return res.status(500).json({ error: "BREVO_API_KEY absente de la configuration Vercel" });
+  }
+  if (!process.env.BREVO_SENDER_EMAIL) {
+    return res.status(500).json({ error: "BREVO_SENDER_EMAIL absente de la configuration Vercel" });
+  }
+
+  const senderEmail = process.env.BREVO_SENDER_EMAIL;
   const senderName = process.env.BREVO_SENDER_NAME || 'J&L Associés – Newsletter Bailleurs';
   const emailSubject = subject || `Votre rendez-vous bailleur – ${new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}`;
 
@@ -36,19 +43,37 @@ export default async function handler(req, res) {
             htmlContent
           })
         });
-        const data = await response.json();
-        results.push({ email, success: response.ok, error: data.message });
+        const data = await response.json().catch(() => ({}));
+        results.push({
+          email,
+          success: response.ok,
+          error: response.ok ? null : (data.message || data.code || `HTTP ${response.status}`)
+        });
+      }
+
+      const sent = results.filter(r => r.success).length;
+
+      // Brevo a tout refuse : ne pas annoncer un succes qui n'a pas eu lieu.
+      if (sent === 0) {
+        const premiere = results.find(r => r.error);
+        return res.status(502).json({
+          error: premiere
+            ? `Brevo a refuse l'envoi (expediteur ${senderEmail}) : ${premiere.error}`
+            : "Brevo a refuse les 3 envois de test",
+          results
+        });
       }
 
       return res.status(200).json({
         success: true,
         mode: 'test',
-        sent: results.filter(r => r.success).length,
+        sent,
+        total: results.length,
         results
       });
 
     } else {
-      // Mode production : envoi via la liste Brevo #2 (Liste Bailleurs C21)
+      // Mode production : envoi via la liste Brevo #3 (Bailleur Century 21)
       const response = await fetch('https://api.brevo.com/v3/emailCampaigns', {
         method: 'POST',
         headers: {
@@ -81,11 +106,20 @@ export default async function handler(req, res) {
         }
       });
 
+      // La campagne est aussi programmee a +1 min : un refus de sendNow n'est
+      // donc pas bloquant, mais il ne doit plus passer inapercu.
+      let warning = null;
+      if (!sendResponse.ok) {
+        const sendData = await sendResponse.json().catch(() => ({}));
+        warning = `Envoi immediat refuse par Brevo (${sendData.message || `HTTP ${sendResponse.status}`}). La campagne reste programmee dans 1 minute.`;
+      }
+
       return res.status(200).json({
         success: true,
         mode: 'production',
         campaignId: data.id,
-        recipients: 221
+        immediate: sendResponse.ok,
+        warning
       });
     }
 
