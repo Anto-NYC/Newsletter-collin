@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Newsletter Bailleurs · Century 21 Agence Collin</title>
+<title>Newsletter Bailleurs ¬∑ Century 21 Agence Collin</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; }
@@ -42,7 +42,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .step.active .step-num { color: #c4a048; }
 .step.active .step-label { color: white; }
 .step.done .step-label { color: #555; }
-.step.done::after { content: '✓'; position: absolute; top: 8px; right: 10px; font-size: 10px; color: #c4a048; }
+.step.done::after { content: '‚úì'; position: absolute; top: 8px; right: 10px; font-size: 10px; color: #c4a048; }
 
 .card { background: white; border-radius: 12px; border: 0.5px solid #e5e5e5; padding: 1.75rem; margin-bottom: 1.25rem; }
 .card-title { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
@@ -149,15 +149,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <div class="header-dot"></div>
     <div>
       <div class="header-title">Newsletter Bailleurs</div>
-      <div class="header-sub">Century 21 · Agence Collin</div>
+      <div class="header-sub">Century 21 ¬∑ Agence Collin</div>
     </div>
   </div>
   <div class="header-right">
     <div class="notif-badge" onclick="toggleNotifPanel()">
-      <div class="notif-icon">🔔</div>
+      <div class="notif-icon">üîî</div>
       <div class="notif-dot" id="notif-dot"></div>
     </div>
-    <div class="header-user">Jessica Beauvillain · Pôle gestion locative</div>
+    <div class="header-user">Jessica Beauvillain ¬∑ P√¥le gestion locative</div>
   </div>
 </div>
 
@@ -176,15 +176,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 
   <div class="steps">
     <div class="step active" id="step-tab-1" onclick="goToStep(1)">
-      <div class="step-num">Étape 1</div>
-      <div class="step-label">Réserve d'articles</div>
+      <div class="step-num">√âtape 1</div>
+      <div class="step-label">R√©serve d'articles</div>
     </div>
     <div class="step" id="step-tab-2" onclick="goToStep(2)">
-      <div class="step-num">Étape 2</div>
-      <div class="step-label">Générer</div>
+      <div class="step-num">√âtape 2</div>
+      <div class="step-label">G√©n√©rer</div>
     </div>
     <div class="step" id="step-tab-3" onclick="goToStep(3)">
-      <div class="step-num">Étape 3</div>
+      <div class="step-num">√âtape 3</div>
       <div class="step-label">Valider & Envoyer</div>
     </div>
     <div class="step" id="step-tab-4" onclick="goToStep(4)">
@@ -198,14 +198,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 
     <div class="veille-bar">
       <div>
-        <div class="veille-title">✨ Veille automatique</div>
-        <div class="veille-sub">Claude recherche les dernières actus immo locatif pour l'Oise et les ajoute à votre réserve.</div>
+        <div class="veille-title">‚ú® Veille automatique</div>
+        <div class="veille-sub">Claude recherche les derni√®res actus immo locatif pour l'Oise et les ajoute √† votre r√©serve.</div>
         <div class="veille-last" id="veille-last"></div>
       </div>
       <div class="veille-actions">
         <div class="veille-spinner" id="veille-spinner">
           <div class="mini-spinner"></div>
-          <span id="veille-msg">Recherche en cours…</span>
+          <span id="veille-msg">Recherche en cours‚Ä¶</span>
         </div>
         <button class="btn btn-gold" onclick="lancerVeille()" id="btn-veille">Lancer la veille</button>
       </div>
@@ -213,36 +213,36 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 
     <div class="card">
       <div class="card-title">Ajouter un article manuellement</div>
-      <div class="card-sub">Vous pouvez aussi ajouter vos propres sujets en complément de la veille automatique.</div>
+      <div class="card-sub">Vous pouvez aussi ajouter vos propres sujets en compl√©ment de la veille automatique.</div>
       <div class="add-article-form">
         <div><input type="text" id="art-title" placeholder="Titre de l'article ou du sujet" /></div>
         <div>
           <select id="art-tag">
-            <option value="Marché local">Marché local</option>
-            <option value="Réglementation">Réglementation</option>
-            <option value="Fiscalité">Fiscalité</option>
-            <option value="Opportunité patrimoine">Opportunité patrimoine</option>
+            <option value="March√© local">March√© local</option>
+            <option value="R√©glementation">R√©glementation</option>
+            <option value="Fiscalit√©">Fiscalit√©</option>
+            <option value="Opportunit√© patrimoine">Opportunit√© patrimoine</option>
             <option value="Conseil pratique">Conseil pratique</option>
             <option value="Travaux & DPE">Travaux & DPE</option>
           </select>
         </div>
-        <div class="full"><textarea id="art-summary" placeholder="Résumé en 2-3 phrases : de quoi parle cet article, pourquoi c'est pertinent pour vos bailleurs ?"></textarea></div>
+        <div class="full"><textarea id="art-summary" placeholder="R√©sum√© en 2-3 phrases : de quoi parle cet article, pourquoi c'est pertinent pour vos bailleurs ?"></textarea></div>
         <div class="full" style="display:flex;gap:10px;align-items:center;">
-          <input type="text" id="art-source" placeholder="Source (ex: SeLoger, Le Figaro Immo…)" style="flex:1" />
+          <input type="text" id="art-source" placeholder="Source (ex: SeLoger, Le Figaro Immo‚Ä¶)" style="flex:1" />
           <button class="btn btn-gold" onclick="addArticle()">+ Ajouter</button>
         </div>
       </div>
     </div>
 
     <div class="selection-bar">
-      <div class="selection-count"><span id="selected-count">0</span> article(s) sélectionné(s) sur 3 recommandés</div>
-      <button class="btn btn-primary" onclick="goToStep(2)">Passer à la génération →</button>
+      <div class="selection-count"><span id="selected-count">0</span> article(s) s√©lectionn√©(s) sur 3 recommand√©s</div>
+      <button class="btn btn-primary" onclick="goToStep(2)">Passer √† la g√©n√©ration ‚Üí</button>
     </div>
 
     <div id="articles-list" class="articles-list">
       <div class="empty-state">
-        <div style="font-size:32px">📋</div>
-        <p>Aucun article dans la réserve ce mois-ci.<br>Lancez la veille automatique ou ajoutez un article manuellement.</p>
+        <div style="font-size:32px">üìã</div>
+        <p>Aucun article dans la r√©serve ce mois-ci.<br>Lancez la veille automatique ou ajoutez un article manuellement.</p>
       </div>
     </div>
   </div>
@@ -250,51 +250,51 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
   <!-- STEP 2 -->
   <div class="section-view" id="section-2">
     <div class="card">
-      <div class="card-title">Récapitulatif de la sélection</div>
-      <div class="card-sub">Vérifiez les articles sélectionnés avant de générer.</div>
+      <div class="card-title">R√©capitulatif de la s√©lection</div>
+      <div class="card-sub">V√©rifiez les articles s√©lectionn√©s avant de g√©n√©rer.</div>
       <div class="generate-summary">
-        <div class="gen-stat"><div class="gen-stat-val" id="gen-count">0</div><div class="gen-stat-label">Articles sélectionnés</div></div>
-        <div class="gen-stat"><div class="gen-stat-val" id="gen-month">—</div><div class="gen-stat-label">Édition</div></div>
-        <div class="gen-stat"><div class="gen-stat-val">~2 min</div><div class="gen-stat-label">Temps de génération</div></div>
+        <div class="gen-stat"><div class="gen-stat-val" id="gen-count">0</div><div class="gen-stat-label">Articles s√©lectionn√©s</div></div>
+        <div class="gen-stat"><div class="gen-stat-val" id="gen-month">‚Äî</div><div class="gen-stat-label">√âdition</div></div>
+        <div class="gen-stat"><div class="gen-stat-val">~2 min</div><div class="gen-stat-label">Temps de g√©n√©ration</div></div>
       </div>
       <div id="gen-articles-preview"></div>
     </div>
     <div class="card">
       <div class="card-title">Votre mot du mois</div>
-      <div class="card-sub">Ce texte apparaîtra dans l'encart signé de votre nom. Laissez vide pour que Claude en génère un automatiquement.</div>
-      <textarea class="mot-jessica" id="mot-jessica" placeholder="Ex : Ce mois-ci, nous souhaitons attirer votre attention sur…"></textarea>
+      <div class="card-sub">Ce texte appara√Ætra dans l'encart sign√© de votre nom. Laissez vide pour que Claude en g√©n√®re un automatiquement.</div>
+      <textarea class="mot-jessica" id="mot-jessica" placeholder="Ex : Ce mois-ci, nous souhaitons attirer votre attention sur‚Ä¶"></textarea>
     </div>
     <div class="card">
       <div class="card-title">Offre promotionnelle du mois <span style="font-size:12px;font-weight:400;color:#aaa;margin-left:8px;">optionnel</span></div>
-      <div class="card-sub">Si vous avez une offre spéciale ce mois-ci, renseignez-la ici. Elle apparaîtra dans un bloc dédié dans la newsletter.</div>
+      <div class="card-sub">Si vous avez une offre sp√©ciale ce mois-ci, renseignez-la ici. Elle appara√Ætra dans un bloc d√©di√© dans la newsletter.</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <input type="text" id="offre-titre" placeholder="Titre de l'offre (ex : Offre de bienvenue)" style="padding:9px 12px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa;outline:none;" />
-        <input type="text" id="offre-validite" placeholder="Validité (ex : Offre valable en juin 2026)" style="padding:9px 12px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa;outline:none;" />
-        <textarea id="offre-description" placeholder="Description de l'offre en 1-2 phrases…" style="grid-column:1/-1;padding:9px 12px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa;outline:none;min-height:70px;resize:vertical;"></textarea>
+        <input type="text" id="offre-validite" placeholder="Validit√© (ex : Offre valable en juin 2026)" style="padding:9px 12px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa;outline:none;" />
+        <textarea id="offre-description" placeholder="Description de l'offre en 1-2 phrases‚Ä¶" style="grid-column:1/-1;padding:9px 12px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa;outline:none;min-height:70px;resize:vertical;"></textarea>
       </div>
     </div>
 
     <div style="display:flex;gap:10px;justify-content:flex-end;">
-      <button class="btn btn-outline" onclick="goToStep(1)">← Retour</button>
-      <button class="btn btn-gold" onclick="generateNewsletter()" id="btn-generate">✨ Générer la newsletter</button>
+      <button class="btn btn-outline" onclick="goToStep(1)">‚Üê Retour</button>
+      <button class="btn btn-gold" onclick="generateNewsletter()" id="btn-generate">‚ú® G√©n√©rer la newsletter</button>
     </div>
     <div class="generating-state" id="generating-state" style="display:none;">
       <div class="spinner"></div>
-      <p id="generating-msg">Claude rédige votre newsletter…</p>
+      <p id="generating-msg">Claude r√©dige votre newsletter‚Ä¶</p>
     </div>
   </div>
 
   <!-- STEP 3 -->
   <div class="section-view" id="section-3">
     <div class="preview-actions">
-      <button class="btn btn-outline" onclick="goToStep(2)">← Regénérer</button>
-      <button class="btn btn-outline" onclick="downloadNewsletter()">⬇ Télécharger HTML</button>
-      <button class="btn btn-outline" onclick="openModal('modal-send-test')" style="background:#f0faf0;color:#2d6a2d;border-color:#b0d8b0;">✉ Envoyer test (3 adresses)</button>
-        <button class="btn btn-outline" onclick="openModal('modal-send-prod')" style="background:#fff8e6;color:#7a5200;border-color:#e8d48a;">📤 Envoyer aux 221 bailleurs</button>
-      <button class="btn btn-gold" onclick="openModal('modal-validate')" style="margin-left:auto;">✓ Valider la newsletter</button>
+      <button class="btn btn-outline" onclick="goToStep(2)">‚Üê Reg√©n√©rer</button>
+      <button class="btn btn-outline" onclick="downloadNewsletter()">‚¨á T√©l√©charger HTML</button>
+      <button class="btn btn-outline" onclick="openModal('modal-send-test')" style="background:#f0faf0;color:#2d6a2d;border-color:#b0d8b0;">‚úâ Envoyer test (3 adresses)</button>
+        <button class="btn btn-outline" onclick="openModal('modal-send-prod')" style="background:#fff8e6;color:#7a5200;border-color:#e8d48a;">üì§ Envoyer aux 221 bailleurs</button>
+      <button class="btn btn-gold" onclick="openModal('modal-validate')" style="margin-left:auto;">‚úì Valider la newsletter</button>
     </div>
     <div class="preview-frame">
-      <iframe id="preview-iframe" title="Prévisualisation newsletter"></iframe>
+      <iframe id="preview-iframe" title="Pr√©visualisation newsletter"></iframe>
     </div>
   </div>
 
@@ -302,8 +302,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
   <div class="section-view" id="section-4">
     <div class="card">
       <div class="card-title">Historique des newsletters</div>
-      <div class="card-sub">Toutes les newsletters générées et leur statut.</div>
-      <div id="history-list"><div class="empty-state"><div style="font-size:32px">📬</div><p>Aucune newsletter générée pour l'instant.</p></div></div>
+      <div class="card-sub">Toutes les newsletters g√©n√©r√©es et leur statut.</div>
+      <div id="history-list"><div class="empty-state"><div style="font-size:32px">üì¨</div><p>Aucune newsletter g√©n√©r√©e pour l'instant.</p></div></div>
     </div>
   </div>
 
@@ -313,17 +313,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 <div class="modal-overlay" id="modal-send-test">
   <div class="modal">
     <h3>Envoyer le test</h3>
-    <p>La newsletter sera envoyée aux 3 adresses de test suivantes :</p>
+    <p>La newsletter sera envoy√©e aux 3 adresses de test suivantes :</p>
     <div style="background:#f9f9f8;border-radius:8px;padding:12px;margin-bottom:1.25rem;font-size:13px;color:#555;line-height:1.8;">
-      ✉ anto.caron39@gmail.com<br>
-      ✉ jessica.beauvillain@century21.fr<br>
-      ✉ nicollet.audrey@gmail.com
+      ‚úâ anto.caron39@gmail.com<br>
+      ‚úâ jessica.beauvillain@century21.fr<br>
+      ‚úâ nicollet.audrey@gmail.com
     </div>
     <label>Objet de l'email (optionnel)</label>
-    <input type="text" id="test-subject" placeholder="Ex : Votre rendez-vous bailleur – Juillet 2026" />
+    <input type="text" id="test-subject" placeholder="Ex : Votre rendez-vous bailleur ‚Äì Juillet 2026" />
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('modal-send-test')">Annuler</button>
-      <button class="btn btn-gold" onclick="sendTestNewsletter()" id="btn-send-test">Envoyer ✉</button>
+      <button class="btn btn-gold" onclick="sendTestNewsletter()" id="btn-send-test">Envoyer ‚úâ</button>
     </div>
   </div>
 </div>
@@ -331,18 +331,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 <!-- MODAL ENVOI PRODUCTION -->
 <div class="modal-overlay" id="modal-send-prod">
   <div class="modal">
-    <h3>⚠️ Envoyer à tous les bailleurs</h3>
-    <p>Cette action va envoyer la newsletter à <strong>221 bailleurs</strong> de votre liste. Cette action est irréversible.</p>
+    <h3>‚ö†Ô∏è Envoyer √† tous les bailleurs</h3>
+    <p>Cette action va envoyer la newsletter √† <strong>221 bailleurs</strong> de votre liste. Cette action est irr√©versible.</p>
     <div style="background:#fff8e6;border-radius:8px;padding:12px;margin-bottom:1.25rem;font-size:13px;color:#7a5200;line-height:1.7;">
-      ✓ Vérifiez que la newsletter est bien validée<br>
-      ✓ Vérifiez le contenu et les liens<br>
-      ✓ L'envoi se fera depuis <strong>jlassocies@outlook.fr</strong>
+      ‚úì V√©rifiez que la newsletter est bien valid√©e<br>
+      ‚úì V√©rifiez le contenu et les liens<br>
+      ‚úì L'envoi se fera depuis <strong>jlassocies@outlook.fr</strong>
     </div>
     <label>Objet de l'email</label>
-    <input type="text" id="prod-subject" placeholder="Votre rendez-vous bailleur – Juillet 2026" />
+    <input type="text" id="prod-subject" placeholder="Votre rendez-vous bailleur ‚Äì Juillet 2026" />
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('modal-send-prod')">Annuler</button>
-      <button class="btn" style="background:#c4a048;color:#111;" onclick="sendProdNewsletter()" id="btn-send-prod">Envoyer à 221 bailleurs →</button>
+      <button class="btn" style="background:#c4a048;color:#111;" onclick="sendProdNewsletter()" id="btn-send-prod">Envoyer √† 221 bailleurs ‚Üí</button>
     </div>
   </div>
 </div>
@@ -351,12 +351,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 <div class="modal-overlay" id="modal-validate">
   <div class="modal">
     <h3>Valider la newsletter</h3>
-    <p>La newsletter sera marquée comme prête et enregistrée dans l'historique. Anthony recevra une alerte dans Orbit.</p>
+    <p>La newsletter sera marqu√©e comme pr√™te et enregistr√©e dans l'historique. Anthony recevra une alerte dans Orbit.</p>
     <label>Note interne (optionnel)</label>
-    <input type="text" id="validate-note" placeholder="Ex : Vérifier le lien parrainage avant envoi" />
+    <input type="text" id="validate-note" placeholder="Ex : V√©rifier le lien parrainage avant envoi" />
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('modal-validate')">Annuler</button>
-      <button class="btn btn-gold" onclick="validateNewsletter()">Valider ✓</button>
+      <button class="btn btn-gold" onclick="validateNewsletter()">Valider ‚úì</button>
     </div>
   </div>
 </div>
@@ -385,7 +385,7 @@ window._newsletters = [];
 window._currentHtml = '';
 window._notifications = JSON.parse(localStorage.getItem('nl_notifs') || '[]');
 
-// ——— UTILS ———
+// ‚Äî‚Äî‚Äî UTILS ‚Äî‚Äî‚Äî
 window.showToast = (msg) => {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -399,7 +399,7 @@ function currentMonth() {
   return new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
 }
 
-// ——— NOTIFICATIONS ———
+// ‚Äî‚Äî‚Äî NOTIFICATIONS ‚Äî‚Äî‚Äî
 function pushNotif(title, msg) {
   const notif = { title, msg, time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }), id: Date.now() };
   window._notifications.unshift(notif);
@@ -445,7 +445,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// ——— NAVIGATION ———
+// ‚Äî‚Äî‚Äî NAVIGATION ‚Äî‚Äî‚Äî
 window.goToStep = (n) => {
   document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -455,33 +455,80 @@ window.goToStep = (n) => {
   if (n === 4) renderHistory();
 };
 
-// ——— VEILLE AUTO ———
+// ‚Äî‚Äî‚Äî VEILLE AUTO ‚Äî‚Äî‚Äî
 window.lancerVeille = async () => {
   const btn = document.getElementById('btn-veille');
   const spinner = document.getElementById('veille-spinner');
   btn.disabled = true;
   spinner.classList.add('show');
 
-  const msgs = ['Recherche en cours…', 'Analyse des sources…', 'Ajout à la réserve…'];
+  const msgs = ['Recherche en cours‚Ä¶', 'Analyse des sources‚Ä¶', 'Ajout √† la r√©serve‚Ä¶'];
   let mi = 0;
   const iv = setInterval(() => { mi = (mi+1)%msgs.length; document.getElementById('veille-msg').textContent = msgs[mi]; }, 2500);
 
-  const prompt = `Tu es un assistant de veille immobilière pour une agence à Pont-Sainte-Maxence (Oise, 60), secteur Hauts-de-France.
+  // Articles d√©j√† en r√©serve : transmis √† l'IA pour √©viter les doublons de sujets
+  const dejaVus = (window._articles || [])
+    .map(a => `- ${a.title}${a.tag ? ' (' + a.tag + ')' : ''}`)
+    .slice(0, 60)
+    .join('\n');
 
-Génère 4 articles d'actualité immobilière récents et pertinents pour des propriétaires bailleurs dans ce secteur (${currentMonth()}).
-Couvre des sujets variés : marché locatif local, réglementation (DPE, loyers, diagnostics), fiscalité bailleur, opportunités d'investissement dans l'Oise.
+  // Rotation d'angles : force un cadrage diff√©rent √† chaque lancement
+  const ANGLES = [
+    "l'impact concret sur la rentabilit√© nette du bailleur",
+    "un changement r√©glementaire ou fiscal √† anticiper dans les 6 √† 12 mois",
+    "une comparaison chiffr√©e entre communes ou quartiers du secteur (Pont-Sainte-Maxence, Creil, Senlis, Compi√®gne, Chantilly, Nogent-sur-Oise)",
+    "une erreur fr√©quente de bailleur et comment l'√©viter",
+    "un type de bien ou de location sp√©cifique (meubl√©, colocation, petite surface, maison, immeuble de rapport)",
+    "la relation locataire : s√©lection, impay√©s, entretien, d√©part",
+    "les travaux, la r√©novation √©nerg√©tique et leurs aides",
+    "une opportunit√© d'arbitrage ou de valorisation du patrimoine"
+  ];
+  const anglesTires = ANGLES.slice().sort(() => Math.random() - 0.5).slice(0, 4);
 
-Réponds UNIQUEMENT en JSON valide, sans aucun texte avant ou après, sous ce format exact :
+  const THEMES = [
+    "march√© locatif local et tensions par typologie de bien",
+    "r√©glementation (DPE, d√©cence, diagnostics, permis de louer, encadrement des loyers)",
+    "fiscalit√© bailleur (r√©gimes micro-foncier/r√©el, d√©ficit foncier, LMNP, plus-values, IFI)",
+    "aides et dispositifs (MaPrimeR√©nov', √©co-PTZ, Loc'Avantages, Denormandie)",
+    "gestion locative au quotidien (bail, √©tat des lieux, charges, r√©vision de loyer, assurance GLI)",
+    "impay√©s, contentieux, proc√©dures et pr√©vention du risque",
+    "investissement et arbitrage patrimonial dans l'Oise",
+    "copropri√©t√© (charges, travaux vot√©s, fonds travaux, syndic)",
+    "assurance, sinistres et responsabilit√©s du bailleur",
+    "transmission, succession, SCI et d√©membrement",
+    "conjoncture : taux de cr√©dit, pouvoir d'achat immobilier, d√©mographie locale",
+    "location meubl√©e, saisonni√®re et r√©glementation associ√©e"
+  ];
+  const themesTires = THEMES.slice().sort(() => Math.random() - 0.5).slice(0, 6);
+
+  const prompt = `Tu es un assistant de veille immobili√®re pour une agence √† Pont-Sainte-Maxence (Oise, 60), secteur Hauts-de-France.
+
+G√©n√®re 4 articles d'actualit√© immobili√®re r√©cents et pertinents pour des propri√©taires bailleurs dans ce secteur (${currentMonth()}).
+
+VARI√âT√â OBLIGATOIRE ‚Äî c'est le crit√®re le plus important de cette demande :
+Les 4 articles doivent √™tre NETTEMENT diff√©rents les uns des autres, et diff√©rents des sujets d√©j√† trait√©s list√©s plus bas.
+Puise dans ces th√®mes (un th√®me diff√©rent par article, choisis parmi) :
+${themesTires.map(t => '- ' + t).join('\n')}
+
+Traite chaque article sous un angle distinct, en t'inspirant de ces angles :
+${anglesTires.map(a => '- ' + a).join('\n')}
+
+${dejaVus ? `SUJETS D√âJ√Ä TRAIT√âS ‚Äî NE PAS LES REPRENDRE, m√™me reformul√©s ou sous un autre titre. Change franchement de sujet :
+${dejaVus}
+` : ''}
+√âvite les marronniers g√©n√©riques (¬´ le DPE √©volue ¬ª, ¬´ le d√©ficit foncier permet de d√©duire ¬ª) sauf si tu apportes un angle r√©ellement neuf et une information pr√©cise et actionnable. Privil√©gie le concret : chiffres locaux, seuils, dates d'entr√©e en vigueur, cas pratiques.
+
+R√©ponds UNIQUEMENT en JSON valide, sans aucun texte avant ou apr√®s, sous ce format exact :
 [
   {
     "title": "Titre accrocheur de l'article",
-    "tag": "Marché local",
-    "summary": "Résumé en 2-3 phrases claires et concrètes pour un bailleur non-expert.",
+    "tag": "March√© local",
+    "summary": "R√©sum√© en 2-3 phrases claires et concr√®tes pour un bailleur non-expert.",
     "source": "Nom de la source"
   }
 ]
 
-Les tags possibles : Marché local, Réglementation, Fiscalité, Opportunité patrimoine, Conseil pratique, Travaux & DPE.
+Les tags possibles : March√© local, R√©glementation, Fiscalit√©, Opportunit√© patrimoine, Conseil pratique, Travaux & DPE.
 Assure-toi que chaque article est distinct et apporte une vraie valeur au bailleur.`;
 
   try {
@@ -495,9 +542,15 @@ Assure-toi que chaque article est distinct et apporte une vraie valeur au baille
     spinner.classList.remove('show');
     btn.disabled = false;
 
-    const raw = data.content?.[0]?.text || '[]';
-    const clean = raw.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
+    if (!res.ok || !data.content?.[0]?.text) {
+      throw new Error(data.error?.message || data.error || 'R√©ponse vide de l\'API Claude');
+    }
+    const raw = data.content[0].text;
+    const clean = raw.replace(/^```json\n?/, '').replace(/^```\n?/, '').replace(/\n?```$/, '').trim();
     const articles = JSON.parse(clean);
+    if (!Array.isArray(articles) || !articles.length) {
+      throw new Error('Aucun article renvoy√© par l\'IA (r√©ponse vide ou format inattendu)');
+    }
 
     let added = 0;
     for (const a of articles) {
@@ -509,9 +562,9 @@ Assure-toi que chaque article est distinct et apporte une vraie valeur au baille
 
     renderArticles();
     const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('veille-last').textContent = `Dernière veille : aujourd'hui à ${now} · ${added} articles ajoutés`;
-    pushNotif('Veille terminée ✓', `${added} nouveaux articles ajoutés à la réserve pour ${currentMonth()}.`);
-    showToast(`${added} articles ajoutés à la réserve ✓`);
+    document.getElementById('veille-last').textContent = `Derni√®re veille : aujourd'hui √† ${now} ¬∑ ${added} articles ajout√©s`;
+    pushNotif('Veille termin√©e ‚úì', `${added} nouveaux articles ajout√©s √† la r√©serve pour ${currentMonth()}.`);
+    showToast(`${added} articles ajout√©s √† la r√©serve ‚úì`);
 
   } catch(e) {
     clearInterval(iv);
@@ -521,7 +574,7 @@ Assure-toi que chaque article est distinct et apporte une vraie valeur au baille
   }
 };
 
-// ——— ARTICLES MANUELS ———
+// ‚Äî‚Äî‚Äî ARTICLES MANUELS ‚Äî‚Äî‚Äî
 async function loadArticles() {
   try {
     const q = query(collection(db, 'newsletter_articles'), orderBy('createdAt', 'desc'));
@@ -536,7 +589,7 @@ window.addArticle = async () => {
   const summary = document.getElementById('art-summary').value.trim();
   const tag = document.getElementById('art-tag').value;
   const source = document.getElementById('art-source').value.trim();
-  if (!title || !summary) { showToast('Titre et résumé requis'); return; }
+  if (!title || !summary) { showToast('Titre et r√©sum√© requis'); return; }
   const article = { title, summary, tag, source, selected: false, auto: false, createdAt: serverTimestamp() };
   try {
     const ref = await addDoc(collection(db, 'newsletter_articles'), article);
@@ -545,7 +598,7 @@ window.addArticle = async () => {
     document.getElementById('art-summary').value = '';
     document.getElementById('art-source').value = '';
     renderArticles();
-    showToast('Article ajouté ✓');
+    showToast('Article ajout√© ‚úì');
   } catch(e) { showToast('Erreur : ' + e.message); }
 };
 
@@ -553,7 +606,7 @@ window.toggleSelect = async (id) => {
   const a = window._articles.find(x => x.id === id);
   if (!a) return;
   const selected = window._articles.filter(x => x.selected);
-  if (!a.selected && selected.length >= 3) { showToast('Maximum 3 articles sélectionnés'); return; }
+  if (!a.selected && selected.length >= 3) { showToast('Maximum 3 articles s√©lectionn√©s'); return; }
   a.selected = !a.selected;
   try { await updateDoc(doc(db, 'newsletter_articles', id), { selected: a.selected }); } catch(e) {}
   renderArticles();
@@ -564,7 +617,7 @@ window.deleteArticle = async (id) => {
     await deleteDoc(doc(db, 'newsletter_articles', id));
     window._articles = window._articles.filter(x => x.id !== id);
     renderArticles();
-    showToast('Article supprimé');
+    showToast('Article supprim√©');
   } catch(e) { showToast('Erreur suppression'); }
 };
 
@@ -573,37 +626,37 @@ function renderArticles() {
   const sel = window._articles.filter(x => x.selected);
   document.getElementById('selected-count').textContent = sel.length;
   if (!window._articles.length) {
-    list.innerHTML = `<div class="empty-state"><div style="font-size:32px">📋</div><p>Aucun article dans la réserve ce mois-ci.<br>Lancez la veille automatique ou ajoutez un article manuellement.</p></div>`;
+    list.innerHTML = `<div class="empty-state"><div style="font-size:32px">üìã</div><p>Aucun article dans la r√©serve ce mois-ci.<br>Lancez la veille automatique ou ajoutez un article manuellement.</p></div>`;
     return;
   }
   list.innerHTML = window._articles.map(a => `
     <div class="article-item ${a.selected ? 'selected' : ''} ${a.auto ? 'auto-added' : ''}">
-      <div class="article-check" onclick="toggleSelect('${a.id}')">${a.selected ? '✓' : ''}</div>
+      <div class="article-check" onclick="toggleSelect('${a.id}')">${a.selected ? '‚úì' : ''}</div>
       <div class="article-content">
         <div>
           <span class="article-tag-badge">${a.tag}</span>
-          ${a.auto ? '<span class="auto-badge">✨ Veille auto</span>' : ''}
+          ${a.auto ? '<span class="auto-badge">‚ú® Veille auto</span>' : ''}
         </div>
         <div class="article-title">${a.title}</div>
         <div class="article-summary">${a.summary}</div>
         ${a.source ? `<div class="article-date">Source : ${a.source}</div>` : ''}
       </div>
-      <div class="article-delete" onclick="deleteArticle('${a.id}')" title="Supprimer">×</div>
+      <div class="article-delete" onclick="deleteArticle('${a.id}')" title="Supprimer">√ó</div>
     </div>
   `).join('');
 }
 
-// ——— STEP 2 ———
+// ‚Äî‚Äî‚Äî STEP 2 ‚Äî‚Äî‚Äî
 function refreshStep2() {
   const sel = window._articles.filter(x => x.selected);
   document.getElementById('gen-count').textContent = sel.length;
   document.getElementById('gen-month').textContent = currentMonth();
   document.getElementById('gen-articles-preview').innerHTML = sel.length
     ? sel.map(a => `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid #f0f0ee;"><span style="font-size:11px;background:#f0f0ee;color:#666;padding:2px 8px;border-radius:4px;white-space:nowrap">${a.tag}</span><span style="font-size:14px;font-weight:500">${a.title}</span></div>`).join('')
-    : `<p style="font-size:13px;color:#aaa">Aucun article sélectionné. Retournez à l'étape 1.</p>`;
+    : `<p style="font-size:13px;color:#aaa">Aucun article s√©lectionn√©. Retournez √† l'√©tape 1.</p>`;
 }
 
-// ——— GABARIT FIXE (HTML/CSS figés une fois pour toutes, seul le contenu texte est généré par l'IA) ———
+// ‚Äî‚Äî‚Äî GABARIT FIXE (HTML/CSS fig√©s une fois pour toutes, seul le contenu texte est g√©n√©r√© par l'IA) ‚Äî‚Äî‚Äî
 function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -706,7 +759,7 @@ function buildNewsletterHtml(d) {
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="color-scheme" content="light only">
 <meta name="supported-color-schemes" content="light only">
-<title>Votre rendez-vous bailleur — ${escapeHtml(d.mois)} ${escapeHtml(d.annee)}</title>
+<title>Votre rendez-vous bailleur ‚Äî ${escapeHtml(d.mois)} ${escapeHtml(d.annee)}</title>
 <style>
 * { box-sizing: border-box; }
 body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; background:#f5f5f3; }
@@ -729,7 +782,7 @@ body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe 
         <div style="font-size:10px;letter-spacing:0.1em;color:#9a8a5a;font-weight:600;">CENTURY 21</div>
         <div style="font-size:18px;font-weight:700;color:#1a1a1a;margin-top:2px;">Agence Collin</div>
         <div style="width:28px;height:2px;background:#BEAF88;margin:8px 0;"></div>
-        <div style="font-size:12px;color:#888;">Pont-Sainte-Maxence · Oise</div>
+        <div style="font-size:12px;color:#888;">Pont-Sainte-Maxence ¬∑ Oise</div>
       </td>
       <td class="h-badge" align="right" valign="top" width="90" style="padding:20px 20px 0 0;white-space:nowrap;">
         ${C21_LOGO_SVG}
@@ -742,7 +795,7 @@ body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe 
     <tr>
       <td colspan="2" style="padding:8px 20px 20px 20px;">
         <div style="font-size:24px;font-weight:700;color:#1a1a1a;">Votre rendez-vous bailleur du mois</div>
-        <div style="font-size:13px;color:#888;margin-top:4px;">Marché · Réglementation · Conseils</div>
+        <div style="font-size:13px;color:#888;margin-top:4px;">March√© ¬∑ R√©glementation ¬∑ Conseils</div>
       </td>
     </tr>
   </table>
@@ -755,9 +808,9 @@ body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe 
         <div style="width:40px;height:40px;border-radius:50%;border:1.5px solid #BEAF88;color:#fff;font-size:13px;font-weight:700;text-align:center;line-height:40px;">JB</div>
       </td>
       <td valign="top" style="padding:20px 20px 20px 0;">
-        <div style="font-style:italic;color:#ccc;font-size:14px;line-height:1.7;">« ${escapeHtml(d.motJessica)} »</div>
+        <div style="font-style:italic;color:#ccc;font-size:14px;line-height:1.7;">¬´ ${escapeHtml(d.motJessica)} ¬ª</div>
         <div style="margin-top:10px;font-size:13px;font-weight:700;color:#fff;">Jessica Beauvillain</div>
-        <div style="font-size:11px;color:#999;">Directrice du pôle gestion locative</div>
+        <div style="font-size:11px;color:#999;">Directrice du p√¥le gestion locative</div>
       </td>
     </tr>
   </table>
@@ -772,8 +825,8 @@ body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#252526;border-radius:12px;">
       <tr><td style="padding:1.75rem;text-align:center;">
         <div style="font-size:10px;letter-spacing:0.08em;color:#BEAF88;text-transform:uppercase;font-weight:700;margin-bottom:8px;">Parrainage</div>
-        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;">Vous connaissez un propriétaire bailleur ?</div>
-        <div style="font-size:13px;color:#aaa;line-height:1.7;max-width:440px;margin:0 auto 20px auto;">Partagez cette newsletter à vos proches propriétaires et aidez-les à gérer leur patrimoine locatif en toute sérénité. Notre équipe est disponible pour répondre à toutes leurs questions, sans engagement.</div>
+        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;">Vous connaissez un propri√©taire bailleur ?</div>
+        <div style="font-size:13px;color:#aaa;line-height:1.7;max-width:440px;margin:0 auto 20px auto;">Partagez cette newsletter √† vos proches propri√©taires et aidez-les √† g√©rer leur patrimoine locatif en toute s√©r√©nit√©. Notre √©quipe est disponible pour r√©pondre √† toutes leurs questions, sans engagement.</div>
         <a href="https://www.century21-ac-pont-ste-maxence.com" target="_blank" style="display:inline-block;background:#BEAF88;color:#252526;font-size:13px;font-weight:700;text-decoration:none;padding:12px 28px;border-radius:8px;">Nous contacter</a>
       </td></tr>
     </table>
@@ -783,10 +836,10 @@ body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#252526;">
     <tr>
       <td class="footer-left" style="padding:16px 20px;font-size:11px;color:#999;">
-        <span style="color:#BEAF88;">●</span> Century 21 Agence Collin
+        <span style="color:#BEAF88;">‚óè</span> Century 21 Agence Collin
       </td>
       <td class="footer-right" align="right" style="padding:16px 20px;font-size:11px;color:#999;">
-        79 avenue Jean Jaurès, 60700 Pont-Sainte-Maxence &nbsp;·&nbsp; <a href="#" style="color:#999;">Se désinscrire</a>
+        79 avenue Jean Jaur√®s, 60700 Pont-Sainte-Maxence &nbsp;¬∑&nbsp; <a href="#" style="color:#999;">Se d√©sinscrire</a>
       </td>
     </tr>
   </table>
@@ -798,55 +851,55 @@ body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe 
 </html>`;
 }
 
-// ——— GÉNÉRATION ———
+// ‚Äî‚Äî‚Äî G√âN√âRATION ‚Äî‚Äî‚Äî
 window.generateNewsletter = async () => {
   const selected = window._articles.filter(x => x.selected);
-  if (!selected.length) { showToast('Sélectionnez au moins 1 article'); return; }
+  if (!selected.length) { showToast('S√©lectionnez au moins 1 article'); return; }
   const motJessicaInput = document.getElementById('mot-jessica').value.trim();
   const offreTitre = document.getElementById('offre-titre').value.trim();
   const offreDescription = document.getElementById('offre-description').value.trim();
   const offreValidite = document.getElementById('offre-validite').value.trim();
   document.getElementById('btn-generate').disabled = true;
   document.getElementById('generating-state').style.display = 'block';
-  const msgs = ['Claude rédige le contenu…', 'Mise en forme des rubriques…', 'Dernière relecture…'];
+  const msgs = ['Claude r√©dige le contenu‚Ä¶', 'Mise en forme des rubriques‚Ä¶', 'Derni√®re relecture‚Ä¶'];
   let mi = 0;
   const iv = setInterval(() => { mi=(mi+1)%msgs.length; document.getElementById('generating-msg').textContent = msgs[mi]; }, 3000);
 
-  const articlesText = selected.map((a,i) => `Article ${i+1} — Rubrique: ${a.tag}\nTitre: ${a.title}\nRésumé: ${a.summary}${a.source?'\nSource: '+a.source:''}`).join('\n\n');
+  const articlesText = selected.map((a,i) => `Article ${i+1} ‚Äî Rubrique: ${a.tag}\nTitre: ${a.title}\nR√©sum√©: ${a.summary}${a.source?'\nSource: '+a.source:''}`).join('\n\n');
   const [moisRaw, annee] = currentMonth().split(' ');
   const mois = moisRaw.charAt(0).toUpperCase() + moisRaw.slice(1);
   const hasOffre = !!(offreTitre && offreDescription);
 
-  const prompt = `Tu es rédacteur d'une newsletter mensuelle pour les bailleurs de Century 21 Agence Collin, Pont-Sainte-Maxence (Oise 60). Ton chaleureux et professionnel.
+  const prompt = `Tu es r√©dacteur d'une newsletter mensuelle pour les bailleurs de Century 21 Agence Collin, Pont-Sainte-Maxence (Oise 60). Ton chaleureux et professionnel.
 
-ARTICLES À TRAITER :
+ARTICLES √Ä TRAITER :
 ${articlesText}
 
-${motJessicaInput ? '' : `Génère aussi un court mot de Jessica Beauvillain (Directrice du pôle gestion locative), chaleureux et professionnel, en lien avec les sujets du mois (3-4 phrases).`}
-${hasOffre ? `\nUne offre promotionnelle "${offreTitre}" est proposée ce mois-ci : ${offreDescription}. Génère un sous-titre très court et accrocheur (5-8 mots) pour cette offre, en lien avec son contenu.` : ''}
+${motJessicaInput ? '' : `G√©n√®re aussi un court mot de Jessica Beauvillain (Directrice du p√¥le gestion locative), chaleureux et professionnel, en lien avec les sujets du mois (3-4 phrases).`}
+${hasOffre ? `\nUne offre promotionnelle "${offreTitre}" est propos√©e ce mois-ci : ${offreDescription}. G√©n√®re un sous-titre tr√®s court et accrocheur (5-8 mots) pour cette offre, en lien avec son contenu.` : ''}
 
-Réponds UNIQUEMENT en JSON valide, sans aucun texte avant/après, sans backticks, selon EXACTEMENT ce format :
+R√©ponds UNIQUEMENT en JSON valide, sans aucun texte avant/apr√®s, sans backticks, selon EXACTEMENT ce format :
 {
   ${motJessicaInput ? '' : '"motJessica": "...",'}
   "stats": [
-    {"value": "chiffre clé 1 (ex: 21 400 €)", "label": "libellé court en 4-6 mots"},
-    {"value": "chiffre clé 2", "label": "libellé court"},
-    {"value": "chiffre clé 3", "label": "libellé court"}
+    {"value": "chiffre cl√© 1 (ex: 21 400 ‚Ç¨)", "label": "libell√© court en 4-6 mots"},
+    {"value": "chiffre cl√© 2", "label": "libell√© court"},
+    {"value": "chiffre cl√© 3", "label": "libell√© court"}
   ],
   "articles": [
     {
-      "tag": "1-2 mots de rubrique (ex: Fiscalité, Marché local, Réglementation)",
+      "tag": "1-2 mots de rubrique (ex: Fiscalit√©, March√© local, R√©glementation)",
       "accroche": "1 phrase accroche de 15-20 mots, sans balises HTML",
-      "motsClefs": ["mot ou expression de l'accroche à mettre en avant", "éventuellement un second"],
-      "texte": "80 à 100 mots de contenu, sans balises HTML",
-      "highlightValue": "un chiffre clé de cet article à mettre en avant (ex: 21 400 €)",
-      "highlightLabel": "libellé très court du chiffre (4-5 mots max)",
-      "isReglementation": true ou false selon si l'article traite de réglementation
+      "motsClefs": ["mot ou expression de l'accroche √† mettre en avant", "√©ventuellement un second"],
+      "texte": "80 √† 100 mots de contenu, sans balises HTML",
+      "highlightValue": "un chiffre cl√© de cet article √† mettre en avant (ex: 21 400 ‚Ç¨)",
+      "highlightLabel": "libell√© tr√®s court du chiffre (4-5 mots max)",
+      "isReglementation": true ou false selon si l'article traite de r√©glementation
     }
   ]${hasOffre ? ',\n  "offreSousTitre": "sous-titre court et accrocheur pour l\'offre"' : ''}
 }
 
-Un objet par article fourni, dans le même ordre. Les 3 "stats" doivent être extraites/déduites des articles ci-dessus (un chiffre différent par article si possible).`;
+Un objet par article fourni, dans le m√™me ordre. Les 3 "stats" doivent √™tre extraites/d√©duites des articles ci-dessus (un chiffre diff√©rent par article si possible).`;
 
   try {
     const res = await fetch('/api/generate', {
@@ -859,13 +912,13 @@ Un objet par article fourni, dans le même ordre. Les 3 "stats" doivent être ex
     document.getElementById('generating-state').style.display = 'none';
     document.getElementById('btn-generate').disabled = false;
     if (!res.ok || !data.content?.[0]?.text) {
-      throw new Error(data.error?.message || data.error || 'Réponse vide de l\'API Claude');
+      throw new Error(data.error?.message || data.error || 'R√©ponse vide de l\'API Claude');
     }
     const raw = data.content[0].text;
     const clean = raw.replace(/^```json\n?/, '').replace(/^```\n?/, '').replace(/\n?```$/, '').trim();
     const parsed = JSON.parse(clean);
     if (!Array.isArray(parsed.articles) || !parsed.articles.length) {
-      throw new Error('Réponse JSON invalide (articles manquants)');
+      throw new Error('R√©ponse JSON invalide (articles manquants)');
     }
     const html = buildNewsletterHtml({
       mois, annee,
@@ -878,7 +931,7 @@ Un objet par article fourni, dans le même ordre. Les 3 "stats" doivent être ex
     goToStep(3);
     const blob1 = new Blob([html], {type:'text/html'});
     document.getElementById('preview-iframe').src = URL.createObjectURL(blob1);
-    showToast('Newsletter générée ✓');
+    showToast('Newsletter g√©n√©r√©e ‚úì');
   } catch(e) {
     clearInterval(iv);
     document.getElementById('generating-state').style.display = 'none';
@@ -887,7 +940,7 @@ Un objet par article fourni, dans le même ordre. Les 3 "stats" doivent être ex
   }
 };
 
-// ——— DOWNLOAD ———
+// ‚Äî‚Äî‚Äî DOWNLOAD ‚Äî‚Äî‚Äî
 window.downloadNewsletter = () => {
   if (!window._currentHtml) return;
   const blob = new Blob([window._currentHtml], { type: 'text/html' });
@@ -897,14 +950,14 @@ window.downloadNewsletter = () => {
   a.click();
 };
 
-// ——— VALIDATION ———
+// ‚Äî‚Äî‚Äî VALIDATION ‚Äî‚Äî‚Äî
 window.sendTestNewsletter = async () => {
-  if (!window._currentHtml) { showToast('Aucune newsletter à envoyer'); return; }
+  if (!window._currentHtml) { showToast('Aucune newsletter √† envoyer'); return; }
   const btn = document.getElementById('btn-send-test');
   btn.disabled = true;
-  btn.textContent = '⏳ Envoi en cours...';
+  btn.textContent = '‚è≥ Envoi en cours...';
   const subject = document.getElementById('test-subject').value.trim() ||
-    `Votre rendez-vous bailleur – ${currentMonth()}`;
+    `Votre rendez-vous bailleur ‚Äì ${currentMonth()}`;
   try {
     const res = await fetch('/api/send-newsletter', {
       method: 'POST',
@@ -917,16 +970,16 @@ window.sendTestNewsletter = async () => {
     });
     const data = await res.json();
     btn.disabled = false;
-    btn.textContent = 'Envoyer ✉';
+    btn.textContent = 'Envoyer ‚úâ';
     closeModal('modal-send-test');
     if (data.success) {
-      showToast('✅ Newsletter envoyée aux 3 adresses de test !');
+      showToast('‚úÖ Newsletter envoy√©e aux 3 adresses de test !');
     } else {
       showToast('Erreur : ' + (data.error || 'Erreur inconnue'));
     }
   } catch(e) {
     btn.disabled = false;
-    btn.textContent = 'Envoyer ✉';
+    btn.textContent = 'Envoyer ‚úâ';
     showToast('Erreur envoi : ' + e.message);
   }
 };
@@ -949,14 +1002,14 @@ window.validateNewsletter = async () => {
       try { await updateDoc(doc(db, 'newsletter_articles', a.id), { selected: false }); } catch(e) {}
     }
     closeModal('modal-validate');
-    pushNotif('Newsletter validée ✓', `La newsletter de ${currentMonth()} a été validée par Jessica. Elle est prête à l'envoi.`);
-    showToast('Newsletter validée et enregistrée ✓');
+    pushNotif('Newsletter valid√©e ‚úì', `La newsletter de ${currentMonth()} a √©t√© valid√©e par Jessica. Elle est pr√™te √† l'envoi.`);
+    showToast('Newsletter valid√©e et enregistr√©e ‚úì');
     goToStep(4);
     await loadHistory();
   } catch(e) { showToast('Erreur : ' + e.message); }
 };
 
-// ——— HISTORIQUE ———
+// ‚Äî‚Äî‚Äî HISTORIQUE ‚Äî‚Äî‚Äî
 async function loadHistory() {
   try {
     const q = query(collection(db, 'newsletter_history'), orderBy('createdAt', 'desc'));
@@ -968,11 +1021,11 @@ async function loadHistory() {
 function renderHistory() {
   const list = document.getElementById('history-list');
   if (!window._newsletters.length) {
-    list.innerHTML = `<div class="empty-state"><div style="font-size:32px">📬</div><p>Aucune newsletter générée pour l'instant.</p></div>`;
+    list.innerHTML = `<div class="empty-state"><div style="font-size:32px">üì¨</div><p>Aucune newsletter g√©n√©r√©e pour l'instant.</p></div>`;
     return;
   }
   const sl = { draft:'status-draft', validated:'status-validated', sent:'status-sent' };
-  const lb = { draft:'Brouillon', validated:'Validée ✓', sent:'Envoyée' };
+  const lb = { draft:'Brouillon', validated:'Valid√©e ‚úì', sent:'Envoy√©e' };
   list.innerHTML = window._newsletters.map(n => `
     <div class="history-item">
       <div class="history-meta">
@@ -981,19 +1034,19 @@ function renderHistory() {
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="history-status ${sl[n.status]||'status-draft'}">${lb[n.status]||n.status}</span>
-        ${n.htmlContent ? `<button onclick="reloadNewsletter('${n.id}')" style="font-size:11px;padding:5px 12px;border-radius:6px;border:0.5px solid #e0e0e0;background:transparent;cursor:pointer;color:#555;">Voir →</button>` : ''}
+        ${n.htmlContent ? `<button onclick="reloadNewsletter('${n.id}')" style="font-size:11px;padding:5px 12px;border-radius:6px;border:0.5px solid #e0e0e0;background:transparent;cursor:pointer;color:#555;">Voir ‚Üí</button>` : ''}
       </div>
     </div>
   `).join('');
 }
 
 window.sendProdNewsletter = async () => {
-  if (!window._currentHtml) { showToast('Aucune newsletter à envoyer'); return; }
+  if (!window._currentHtml) { showToast('Aucune newsletter √† envoyer'); return; }
   const btn = document.getElementById('btn-send-prod');
   btn.disabled = true;
-  btn.textContent = '⏳ Envoi en cours...';
+  btn.textContent = '‚è≥ Envoi en cours...';
   const subject = document.getElementById('prod-subject').value.trim() ||
-    `Votre rendez-vous bailleur – ${currentMonth()}`;
+    `Votre rendez-vous bailleur ‚Äì ${currentMonth()}`;
   try {
     const res = await fetch('/api/send-newsletter', {
       method: 'POST',
@@ -1002,16 +1055,16 @@ window.sendProdNewsletter = async () => {
     });
     const data = await res.json();
     btn.disabled = false;
-    btn.textContent = 'Envoyer à 221 bailleurs →';
+    btn.textContent = 'Envoyer √† 221 bailleurs ‚Üí';
     closeModal('modal-send-prod');
     if (data.success) {
-      showToast(`✅ Newsletter envoyée à ${data.recipients} bailleurs !`);
+      showToast(`‚úÖ Newsletter envoy√©e √† ${data.recipients} bailleurs !`);
     } else {
       showToast('Erreur : ' + (data.error || 'Erreur inconnue'));
     }
   } catch(e) {
     btn.disabled = false;
-    btn.textContent = 'Envoyer à 221 bailleurs →';
+    btn.textContent = 'Envoyer √† 221 bailleurs ‚Üí';
     showToast('Erreur : ' + e.message);
   }
 };
