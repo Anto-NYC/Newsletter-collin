@@ -291,7 +291,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
       <button class="btn btn-outline" onclick="goToStep(2)">← Regénérer</button>
       <button class="btn btn-outline" onclick="downloadNewsletter()">⬇ Télécharger HTML</button>
       <button class="btn btn-outline" onclick="openModal('modal-send-test')" style="background:#f0faf0;color:#2d6a2d;border-color:#b0d8b0;">✉ Envoyer test (3 adresses)</button>
-        <button class="btn btn-outline" onclick="openModal('modal-send-prod')" style="background:#fff8e6;color:#7a5200;border-color:#e8d48a;">📤 Envoyer aux 221 bailleurs</button>
+        <button class="btn btn-outline" onclick="ouvrirEnvoiProd()" style="background:#fff8e6;color:#7a5200;border-color:#e8d48a;">📤 Envoyer <span id="count-prod-btn">aux bailleurs</span></button>
       <button class="btn btn-gold" onclick="openModal('modal-validate')" style="margin-left:auto;">✓ Valider la newsletter</button>
     </div>
     <div class="preview-frame">
@@ -349,7 +349,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 <div class="modal-overlay" id="modal-send-prod">
   <div class="modal">
     <h3>⚠️ Envoyer à tous les bailleurs</h3>
-    <p>Cette action va envoyer la newsletter à <strong>221 bailleurs</strong> de votre liste. Cette action est irréversible.</p>
+    <p>Cette action va envoyer la newsletter à <strong id="count-prod-modal">tous les bailleurs</strong> de votre liste. Cette action est irréversible.</p>
+    <p id="count-prod-note" style="font-size:12px;color:#7a5200;margin:-0.5rem 0 1rem;"></p>
     <div style="background:#fff8e6;border-radius:8px;padding:12px;margin-bottom:1.25rem;font-size:13px;color:#7a5200;line-height:1.7;">
       ✓ Vérifiez que la newsletter est bien validée<br>
       ✓ Vérifiez le contenu et les liens<br>
@@ -359,7 +360,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <input type="text" id="prod-subject" placeholder="Votre rendez-vous bailleur – Juillet 2026" />
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('modal-send-prod')">Annuler</button>
-      <button class="btn" style="background:#c4a048;color:#111;" onclick="sendProdNewsletter()" id="btn-send-prod">Envoyer à 221 bailleurs →</button>
+      <button class="btn" style="background:#c4a048;color:#111;" onclick="sendProdNewsletter()" id="btn-send-prod">Envoyer aux bailleurs →</button>
     </div>
   </div>
 </div>
@@ -1111,6 +1112,48 @@ function renderHistory() {
   `).join('');
 }
 
+// ——— EFFECTIF REEL DE LA LISTE BREVO ———
+// Rien n'est fige dans le HTML : le nombre affiche avant un envoi irreversible
+// est celui que Brevo renvoie au moment ou la fenetre s'ouvre.
+window._effectif = null;
+
+function majEffectifUI() {
+  const d = window._effectif;
+  const n = d ? d.destinataires : null;
+  const pluriel = n !== null && n > 1 ? 's' : '';
+  const aux = n === null ? 'aux bailleurs' : `aux ${n} bailleur${pluriel}`;
+  const a   = n === null ? 'tous les bailleurs' : `${n} bailleur${pluriel}`;
+
+  document.getElementById('count-prod-btn').textContent = aux;
+  document.getElementById('count-prod-modal').textContent = a;
+
+  const btn = document.getElementById('btn-send-prod');
+  if (!btn.disabled) btn.textContent = `Envoyer ${aux} →`;
+
+  const note = document.getElementById('count-prod-note');
+  note.textContent = d && d.blacklisted
+    ? `${d.blacklisted} contact${d.blacklisted > 1 ? 's' : ''} désinscrit${d.blacklisted > 1 ? 's' : ''} dans la liste, exclu${d.blacklisted > 1 ? 's' : ''} de l'envoi.`
+    : '';
+}
+
+async function chargerEffectif() {
+  const res = await fetch('/api/list-info');
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  window._effectif = data;
+}
+
+window.ouvrirEnvoiProd = async () => {
+  openModal('modal-send-prod');
+  try {
+    await chargerEffectif();
+  } catch(e) {
+    window._effectif = null;
+    showToast('Effectif Brevo indisponible : ' + e.message);
+  }
+  majEffectifUI();
+};
+
 window.sendProdNewsletter = async () => {
   if (!window._currentHtml) { showToast('Aucune newsletter à envoyer'); return; }
   const btn = document.getElementById('btn-send-prod');
@@ -1126,7 +1169,7 @@ window.sendProdNewsletter = async () => {
     });
     const data = await res.json();
     btn.disabled = false;
-    btn.textContent = 'Envoyer à 221 bailleurs →';
+    majEffectifUI();
     closeModal('modal-send-prod');
     if (data.success) {
       showToast(data.warning
@@ -1137,7 +1180,7 @@ window.sendProdNewsletter = async () => {
     }
   } catch(e) {
     btn.disabled = false;
-    btn.textContent = 'Envoyer à 221 bailleurs →';
+    majEffectifUI();
     showToast('Erreur : ' + e.message);
   }
 };
@@ -1152,6 +1195,7 @@ window.reloadNewsletter = function(id) {
 }
 
 // INIT
+chargerEffectif().then(majEffectifUI).catch(() => {});
 loadArticles();
 loadHistory();
 renderNotifs();
