@@ -84,6 +84,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .article-date { font-size: 11px; color: #bbb; margin-top: 6px; }
 .article-delete { font-size: 18px; color: #ddd; cursor: pointer; flex-shrink: 0; line-height: 1; transition: color 0.15s; }
 .article-delete:hover { color: #e24b4a; }
+.article-edit { font-size: 14px; color: #ddd; cursor: pointer; flex-shrink: 0; line-height: 1; transition: color 0.15s; }
+.article-edit:hover { color: #c4a048; }
 
 .selection-bar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: #111; border-radius: 10px; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
 .selection-count { font-size: 13px; color: rgba(255,255,255,0.6); }
@@ -140,6 +142,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .modal input { width: 100%; padding: 9px 12px; border: 0.5px solid #e0e0e0; border-radius: 8px; font-size: 13px; font-family: inherit; margin-bottom: 10px; background: #fafafa; outline: none; }
 .modal label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+.modal select, .modal textarea { width: 100%; padding: 9px 12px; border: 0.5px solid #e0e0e0; border-radius: 8px; font-size: 13px; font-family: inherit; margin-bottom: 10px; background: #fafafa; color: #1a1a1a; outline: none; }
+.modal textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -341,6 +345,27 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('modal-send-test')">Annuler</button>
       <button class="btn btn-gold" onclick="sendTestNewsletter()" id="btn-send-test">Envoyer ✉</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITION ARTICLE -->
+<div class="modal-overlay" id="modal-edit-article">
+  <div class="modal">
+    <h3>Modifier l'article</h3>
+    <p>Les corrections sont enregistrées dans la réserve. Si la newsletter est déjà générée, regénérez-la pour les y reporter.</p>
+    <input type="hidden" id="edit-id" />
+    <label>Titre</label>
+    <input type="text" id="edit-title" />
+    <label>Catégorie</label>
+    <select id="edit-tag"></select>
+    <label>Résumé</label>
+    <textarea id="edit-summary"></textarea>
+    <label>Source</label>
+    <input type="text" id="edit-source" placeholder="Ex : SeLoger, Le Figaro Immo…" />
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-edit-article')">Annuler</button>
+      <button class="btn btn-gold" onclick="enregistrerArticle()" id="btn-edit-save">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -630,6 +655,60 @@ window.addArticle = async () => {
   } catch(e) { showToast('Erreur : ' + e.message); }
 };
 
+// ——— EDITION D'UN ARTICLE ———
+// L'IA se trompe (fautes, chiffre errone, source approximative) : la reserve doit
+// etre corrigeable sans avoir a supprimer puis ressaisir l'article a la main.
+window.ouvrirEditionArticle = (id) => {
+  const a = window._articles.find(x => x.id === id);
+  if (!a) { showToast('Article introuvable'); return; }
+
+  // Les categories viennent du formulaire d'ajout : une seule source de verite.
+  const options = document.getElementById('art-tag');
+  const cible = document.getElementById('edit-tag');
+  cible.innerHTML = options.innerHTML;
+  if (a.tag && !Array.from(cible.options).some(o => o.value === a.tag)) {
+    cible.add(new Option(a.tag, a.tag));   // categorie inventee par l'IA : on la conserve
+  }
+
+  document.getElementById('edit-id').value = a.id;
+  document.getElementById('edit-title').value = a.title || '';
+  document.getElementById('edit-summary').value = a.summary || '';
+  document.getElementById('edit-source').value = a.source || '';
+  cible.value = a.tag || cible.options[0].value;
+
+  openModal('modal-edit-article');
+  document.getElementById('edit-title').focus();
+};
+
+window.enregistrerArticle = async () => {
+  const id = document.getElementById('edit-id').value;
+  const title = document.getElementById('edit-title').value.trim();
+  const summary = document.getElementById('edit-summary').value.trim();
+  const tag = document.getElementById('edit-tag').value;
+  const source = document.getElementById('edit-source').value.trim();
+
+  if (!title || !summary) { showToast('Titre et résumé requis'); return; }
+
+  const a = window._articles.find(x => x.id === id);
+  if (!a) { showToast('Article introuvable'); return; }
+
+  const btn = document.getElementById('btn-edit-save');
+  btn.disabled = true;
+  btn.textContent = '⏳ Enregistrement…';
+  try {
+    await updateDoc(doc(db, 'newsletter_articles', id), { title, summary, tag, source });
+    Object.assign(a, { title, summary, tag, source });
+    renderArticles();
+    closeModal('modal-edit-article');
+    showToast('Article modifié ✓');
+  } catch(e) {
+    showToast('Erreur : ' + e.message);   // rien n'est modifie en local si Firestore refuse
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enregistrer';
+  }
+};
+
 window.toggleSelect = async (id) => {
   const a = window._articles.find(x => x.id === id);
   if (!a) return;
@@ -703,13 +782,14 @@ function renderArticles() {
       <div class="article-check" onclick="toggleSelect('${a.id}')">${a.selected ? '✓' : ''}</div>
       <div class="article-content">
         <div>
-          <span class="article-tag-badge">${a.tag}</span>
+          <span class="article-tag-badge">${escapeHtml(a.tag || '')}</span>
           ${a.auto ? '<span class="auto-badge">✨ Veille auto</span>' : ''}
         </div>
-        <div class="article-title">${a.title}</div>
-        <div class="article-summary">${a.summary}</div>
-        ${a.source ? `<div class="article-date">Source : ${a.source}</div>` : ''}
+        <div class="article-title">${escapeHtml(a.title || '')}</div>
+        <div class="article-summary">${escapeHtml(a.summary || '')}</div>
+        ${a.source ? `<div class="article-date">Source : ${escapeHtml(a.source)}</div>` : ''}
       </div>
+      <div class="article-edit" onclick="ouvrirEditionArticle('${a.id}')" title="Modifier">✎</div>
       <div class="article-delete" onclick="deleteArticle('${a.id}')" title="Supprimer">×</div>
     </div>
   `).join('');
@@ -721,7 +801,7 @@ function refreshStep2() {
   document.getElementById('gen-count').textContent = sel.length;
   document.getElementById('gen-month').textContent = currentMonth();
   document.getElementById('gen-articles-preview').innerHTML = sel.length
-    ? sel.map(a => `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid #f0f0ee;"><span style="font-size:11px;background:#f0f0ee;color:#666;padding:2px 8px;border-radius:4px;white-space:nowrap">${a.tag}</span><span style="font-size:14px;font-weight:500">${a.title}</span></div>`).join('')
+    ? sel.map(a => `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid #f0f0ee;"><span style="font-size:11px;background:#f0f0ee;color:#666;padding:2px 8px;border-radius:4px;white-space:nowrap">${escapeHtml(a.tag || '')}</span><span style="font-size:14px;font-weight:500">${escapeHtml(a.title || '')}</span></div>`).join('')
     : `<p style="font-size:13px;color:#aaa">Aucun article sélectionné. Retournez à l'étape 1.</p>`;
 }
 
