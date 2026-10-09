@@ -1,3 +1,5 @@
+const BREVO_LIST_ID = Number(process.env.BREVO_LIST_ID) || 3;
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -73,7 +75,7 @@ export default async function handler(req, res) {
       });
 
     } else {
-      // Mode production : envoi via la liste Brevo #3 (Bailleur Century 21)
+      // Mode production : envoi via la liste Brevo (Bailleur Century 21)
       const response = await fetch('https://api.brevo.com/v3/emailCampaigns', {
         method: 'POST',
         headers: {
@@ -86,7 +88,7 @@ export default async function handler(req, res) {
           sender: { name: senderName, email: senderEmail },
           type: 'classic',
           htmlContent,
-          recipients: { listIds: [3] },
+          recipients: { listIds: [BREVO_LIST_ID] },
           scheduledAt: new Date(Date.now() + 60000).toISOString() // Dans 1 minute
         })
       });
