@@ -293,6 +293,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
   <div class="section-view" id="section-3">
     <div class="preview-actions">
       <button class="btn btn-outline" onclick="goToStep(2)">← Regénérer</button>
+      <button class="btn btn-outline" onclick="ouvrirCorrectionTextes()">✎ Corriger les textes</button>
       <button class="btn btn-outline" onclick="downloadNewsletter()">⬇ Télécharger HTML</button>
       <button class="btn btn-outline" onclick="openModal('modal-send-test')" style="background:#f0faf0;color:#2d6a2d;border-color:#b0d8b0;">✉ Envoyer test (3 adresses)</button>
         <button class="btn btn-outline" onclick="ouvrirEnvoiProd()" style="background:#fff8e6;color:#7a5200;border-color:#e8d48a;">📤 Envoyer <span id="count-prod-btn">aux bailleurs</span></button>
@@ -345,6 +346,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('modal-send-test')">Annuler</button>
       <button class="btn btn-gold" onclick="sendTestNewsletter()" id="btn-send-test">Envoyer ✉</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CORRECTION DES TEXTES DE LA NEWSLETTER -->
+<div class="modal-overlay" id="modal-edit-texte">
+  <div class="modal" style="max-width:720px;max-height:86vh;display:flex;flex-direction:column;">
+    <h3>Corriger les textes</h3>
+    <p>Les corrections sont réappliquées au gabarit. Rien n'est regénéré : le reste de la newsletter ne bouge pas.</p>
+    <div id="edit-texte-champs" style="overflow-y:auto;flex:1;padding-right:6px;margin-bottom:1rem;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-edit-texte')">Annuler</button>
+      <button class="btn btn-gold" id="btn-edit-texte-save" onclick="appliquerCorrections()">Appliquer</button>
     </div>
   </div>
 </div>
@@ -1069,13 +1083,16 @@ Un objet par article fourni, dans le même ordre. Les 3 "stats" doivent être ex
     if (!Array.isArray(parsed.articles) || !parsed.articles.length) {
       throw new Error('Réponse JSON invalide (articles manquants)');
     }
-    const html = buildNewsletterHtml({
+    // Les donnees structurees sont conservees : c'est ce qui rend les textes
+    // corrigeables ensuite sans repasser par l'IA.
+    window._newsletterData = {
       mois, annee,
       motJessica: motJessicaInput || parsed.motJessica || '',
       stats: parsed.stats || [],
       articles: parsed.articles,
       offre: hasOffre ? { titre: offreTitre, description: offreDescription, validite: offreValidite, sousTitre: parsed.offreSousTitre || '' } : null
-    });
+    };
+    const html = buildNewsletterHtml(window._newsletterData);
     window._currentHtml = html;
     goToStep(3);
     const blob1 = new Blob([html], {type:'text/html'});
@@ -1086,6 +1103,99 @@ Un objet par article fourni, dans le même ordre. Les 3 "stats" doivent être ex
     document.getElementById('generating-state').style.display = 'none';
     document.getElementById('btn-generate').disabled = false;
     showToast('Erreur : ' + e.message);
+  }
+};
+
+// ——— CORRECTION DES TEXTES DE LA NEWSLETTER GENEREE ———
+// L'IA reecrit les articles a chaque generation : regenerer pour corriger une faute
+// donne un texte different, pas le meme corrige. On rejoue donc le gabarit sur les
+// memes donnees, avec le texte retouche a la main.
+window._newsletterData = null;
+let _champsTexte = [];
+
+function lireChemin(obj, chemin) {
+  return chemin.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj);
+}
+
+function ecrireChemin(obj, chemin, valeur) {
+  const parties = chemin.split('.');
+  const derniere = parties.pop();
+  const cible = parties.reduce((o, k) => o[k], obj);
+  cible[derniere] = valeur;
+}
+
+function champsTexte(d) {
+  const champs = [];
+  if (d.motJessica) champs.push({ chemin: 'motJessica', libelle: 'Mot de la directrice', long: true });
+
+  (d.stats || []).forEach((_, i) => {
+    champs.push({ chemin: `stats.${i}.value`, libelle: `Chiffre ${i + 1} — valeur` });
+    champs.push({ chemin: `stats.${i}.label`, libelle: `Chiffre ${i + 1} — libellé` });
+  });
+
+  (d.articles || []).forEach((a, i) => {
+    champs.push({ chemin: `articles.${i}.tag`, libelle: `Article ${i + 1} — catégorie` });
+    champs.push({ chemin: `articles.${i}.accroche`, libelle: `Article ${i + 1} — titre` });
+    champs.push({ chemin: `articles.${i}.texte`, libelle: `Article ${i + 1} — texte`, long: true });
+    if (a.highlightValue) {
+      champs.push({ chemin: `articles.${i}.highlightValue`, libelle: `Article ${i + 1} — encadré, valeur` });
+      champs.push({ chemin: `articles.${i}.highlightLabel`, libelle: `Article ${i + 1} — encadré, libellé` });
+    }
+  });
+
+  if (d.offre) {
+    champs.push({ chemin: 'offre.titre', libelle: 'Offre — titre' });
+    champs.push({ chemin: 'offre.sousTitre', libelle: 'Offre — sous-titre' });
+    champs.push({ chemin: 'offre.description', libelle: 'Offre — description', long: true });
+    champs.push({ chemin: 'offre.validite', libelle: 'Offre — validité' });
+  }
+
+  return champs;
+}
+
+window.ouvrirCorrectionTextes = () => {
+  if (!window._currentHtml) { showToast('Aucune newsletter à corriger'); return; }
+  if (!window._newsletterData) {
+    showToast("Cette newsletter a été générée avant cette fonction : ses textes ne sont plus modifiables, seulement téléchargeables.");
+    return;
+  }
+
+  const d = window._newsletterData;
+  _champsTexte = champsTexte(d);
+
+  // Le balisage est cree vide, les valeurs sont posees ensuite via .value :
+  // aucune chaine utilisateur ne transite par du HTML.
+  document.getElementById('edit-texte-champs').innerHTML = _champsTexte.map((c, i) => `
+    <label for="tx-${i}">${escapeHtml(c.libelle)}</label>
+    ${c.long ? `<textarea id="tx-${i}"></textarea>` : `<input type="text" id="tx-${i}" />`}
+  `).join('');
+
+  _champsTexte.forEach((c, i) => {
+    document.getElementById(`tx-${i}`).value = lireChemin(d, c.chemin) || '';
+  });
+
+  openModal('modal-edit-texte');
+};
+
+window.appliquerCorrections = () => {
+  if (!window._newsletterData) return;
+  const d = JSON.parse(JSON.stringify(window._newsletterData));
+
+  _champsTexte.forEach((c, i) => {
+    const champ = document.getElementById(`tx-${i}`);
+    if (champ) ecrireChemin(d, c.chemin, champ.value);
+  });
+
+  try {
+    const html = buildNewsletterHtml(d);
+    window._newsletterData = d;
+    window._currentHtml = html;
+    document.getElementById('preview-iframe').src =
+      URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    closeModal('modal-edit-texte');
+    showToast('Textes corrigés ✓');
+  } catch(e) {
+    showToast('Erreur : ' + e.message);   // l'apercu precedent reste intact
   }
 };
 
@@ -1145,6 +1255,8 @@ window.validateNewsletter = async () => {
       status: 'validated',
       note,
       htmlContent: window._currentHtml,
+      // JSON.parse(JSON.stringify(...)) retire les champs undefined, que Firestore refuse
+      data: window._newsletterData ? JSON.parse(JSON.stringify(window._newsletterData)) : null,
       articles: selected.map(a => a.title),
       validatedBy: 'Jessica Beauvillain',
       createdAt: serverTimestamp()
@@ -1269,6 +1381,7 @@ window.reloadNewsletter = function(id) {
   const n = window._newsletters.find(x => x.id === id);
   if (!n || !n.htmlContent) { showToast('Contenu non disponible'); return; }
   window._currentHtml = n.htmlContent;
+  window._newsletterData = n.data || null;   // absent sur les newsletters d'avant cette version
   goToStep(3);
   const blob3 = new Blob([n.htmlContent], {type:'text/html'});
   document.getElementById('preview-iframe').src = URL.createObjectURL(blob3);
